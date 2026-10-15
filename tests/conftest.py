@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -25,10 +27,10 @@ def client(db_path):
 
 
 def csrf(client, path="/login"):
-    from bs4 import BeautifulSoup
-
     page = client.get(path)
-    return BeautifulSoup(page.text, "html.parser").find("input", {"name": "csrf_token"})["value"]
+    result = re.search(r'name="csrf_token"\s+value="([^"]+)"', page.text)
+    assert result is not None
+    return result.group(1)
 
 
 def login(client, username="alice", password="AliceTest123!"):
