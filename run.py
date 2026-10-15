@@ -32,6 +32,10 @@ def prepare_runtime() -> None:
 
 
 def main() -> None:
+    if os.name == "nt":
+        for stream in (sys.stdout, sys.stderr):
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding="utf-8", errors="replace")
     os.chdir(ROOT)
     command = sys.argv[1] if len(sys.argv) > 1 else "serve"
     if command == "serve" or command.startswith("--"):

@@ -75,6 +75,9 @@ python -m ruff check src tests run.py
 - `docs/database.md` - схема БД и правила хранения
 - `docs/user_guide.md` - руководство пользователя
 - `docs/security.md` - роли и защитные механизмы
+- `docs/verification.md` - порядок проверки функций и ролей
+- `docs/code_guide.md` - пояснения к значимым участкам исходного кода
+- `sql/schema.sql` - определения таблиц и ограничений SQLite
 - `docs/diagrams/` - схемы архитектуры и базы данных
 
 ## Границы реализации
