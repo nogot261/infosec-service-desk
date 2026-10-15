@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="heading-row"><div><div class="eyebrow">ОБРАБОТКА ОБРАЩЕНИЙ</div><h1>Заявки</h1><p class="muted">Поиск и контроль исполнения</p></div><a class="primary button" href="/tickets/new">+ Новая заявка</a></div>
-<section class="panel"><form class="filters" method="get" action="/tickets">
-<label class="grow">Поиск<input name="q" placeholder="Номер, тема, описание" value="{{ search }}"></label>
-<label>Статус<select name="status"><option value="">Все статусы</option>{% for k,v in statuses.items() %}<option value="{{ k }}" {{ 'selected' if status_filter==k else '' }}>{{ v }}</option>{% endfor %}</select></label>
-<button class="secondary">Найти</button><a href="/tickets" class="button secondary">Сбросить</a>
-</form><div class="table-wrap">{% include '_table.html' %}</div></section>
-{% if user.role != 'requester' %}<p class="minor-link"><a href="/export.csv">Скачать реестр заявок в CSV</a></p>{% endif %}
+<div class="page-head">
+  <div><p class="section-label">Учет обращений</p><h1>Заявки</h1><p class="page-description">Реестр обращений, поиск и контроль исполнения.</p></div>
+  <a href="/tickets/new" class="button primary">Создать заявку</a>
+</div>
+<section class="panel" aria-label="Реестр заявок">
+  <form class="filters" method="get" action="/tickets" role="search">
+    <label class="grow" for="ticket-search">Поиск по заявкам
+      <input id="ticket-search" name="q" type="search" placeholder="Тема, номер или описание" value="{{ search }}">
+    </label>
+    <label for="ticket-status">Статус
+      <select id="ticket-status" name="status"><option value="">Все статусы</option>{% for key,label in statuses.items() %}<option value="{{ key }}" {% if status_filter == key %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+    </label>
+    <div class="filter-actions"><button class="secondary" type="submit">Применить</button><a class="button quiet" href="/tickets">Сбросить</a></div>
+  </form>
+  <div class="table-wrap">{% include '_table.html' %}</div>
+</section>
+{% if user.role != 'requester' %}<div class="inline-actions"><a class="text-link" href="/export.csv">Экспортировать реестр в CSV</a></div>{% endif %}
 {% endblock %}

@@ -1,13 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="breadcrumb"><a href="/tickets">Заявки</a><span>/</span>{{ ticket.id | ticket_no }}</div>
-<div class="heading-row"><div><div class="eyebrow">КАРТОЧКА ОБРАЩЕНИЯ</div><h1>{{ ticket.title }}</h1><p class="muted">{{ ticket.id | ticket_no }} · Создана {{ ticket.created_at }}</p></div><span class="status large status-{{ ticket.status }}">{{ statuses[ticket.status] }}</span></div>
-<div class="details-grid"><div class="stack gap-lg">
-<section class="panel padded"><h2>Описание проблемы</h2><p class="description">{{ ticket.description }}</p><div class="info-grid"><div><small>Категория</small><strong>{{ categories[ticket.category] }}</strong></div><div><small>Приоритет</small><strong>{{ priorities[ticket.priority] }}</strong></div><div><small>Заявитель</small><strong>{{ ticket.author_name }}</strong></div><div><small>Средство защиты</small><strong>{{ ticket.asset_name or 'Не указано' }}</strong></div></div></section>
-<section class="panel padded"><h2>Обсуждение</h2><div class="timeline">{% for item in comments %}<div class="timeline-item"><div class="comment-name">{{ item.author_name }} <small>{{ item.created_at }}</small></div><p class="description">{{ item.body }}</p></div>{% else %}<p class="muted">Комментариев пока нет</p>{% endfor %}</div>
-<form action="/tickets/{{ ticket.id }}/comments" method="post" class="stack"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><label>Добавить комментарий<textarea name="body" rows="3" minlength="2" maxlength="2000" required placeholder="Сообщение по заявке"></textarea></label><button class="primary align-self">Отправить</button></form></section>
-</div><div class="stack gap-lg">
-{% if user.role != 'requester' %}<section class="panel padded"><h2>Управление заявкой</h2><form method="post" action="/tickets/{{ ticket.id }}/update" class="stack"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><label>Статус<select name="status"><option value="{{ ticket.status }}">{{ statuses[ticket.status] }}</option>{% for key in transitions %}<option value="{{ key }}">{{ statuses[key] }}</option>{% endfor %}</select></label><label>Исполнитель<select name="assignee_id"><option value="">Не назначен</option>{% for member in assignees %}<option value="{{ member.id }}" {{ 'selected' if member.id == ticket.assignee_id else '' }}>{{ member.full_name }}</option>{% endfor %}</select></label><button class="primary">Сохранить изменения</button></form></section>{% endif %}
-<section class="panel padded"><h2>История изменений</h2><div class="history">{% for event in events %}<div class="history-row"><span class="history-dot"></span><div><strong>{{ event.actor_name or 'Система' }}</strong><small>{{ event.created_at }}</small><p>{{ event.details }}</p></div></div>{% endfor %}</div></section>
-</div></div>
+<nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/tickets">Заявки</a><span aria-hidden="true">/</span><span>{{ ticket.id | ticket_no }}</span></nav>
+<div class="page-head">
+  <div><p class="section-label">{{ ticket.id | ticket_no }} · {{ ticket.created_at[:16] }}</p><h1>{{ ticket.title }}</h1><p class="page-description">{{ categories[ticket.category] }} · {{ priorities[ticket.priority] }} приоритет</p></div>
+  <span class="badge badge-{{ ticket.status }}">{{ statuses[ticket.status] }}</span>
+</div>
+<div class="details-grid">
+  <div class="details-column">
+    <section class="panel" aria-labelledby="description-title"><div class="panel-body"><h2 id="description-title">Описание обращения</h2>
+      <p class="description">{{ ticket.description }}</p>
+      <div class="info-grid">
+        <div><small>Категория</small><strong>{{ categories[ticket.category] }}</strong></div>
+        <div><small>Приоритет</small><strong class="priority priority-{{ ticket.priority }}">{{ priorities[ticket.priority] }}</strong></div>
+        <div><small>Заявитель</small><strong>{{ ticket.author_name }}</strong></div>
+        <div><small>Средство защиты</small><strong>{{ ticket.asset_name or 'Не указано' }}</strong></div>
+      </div>
+    </div></section>
+    <section class="panel" aria-labelledby="discussion-title"><div class="panel-body"><h2 id="discussion-title">Обсуждение</h2>
+      <div class="history">{% for item in comments %}
+        <div class="timeline-item"><div class="timeline-item-header"><strong>{{ item.author_name }}</strong><small>{{ item.created_at }}</small></div><p>{{ item.body }}</p></div>
+      {% else %}<p class="section-note">Комментариев еще нет.</p>{% endfor %}</div>
+      <form action="/tickets/{{ ticket.id }}/comments" method="post" class="stack comment-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label for="comment-body">Добавить комментарий<textarea id="comment-body" name="body" rows="3" minlength="2" maxlength="2000" required placeholder="Укажите ход работ или дополнительную информацию"></textarea></label>
+        <div class="form-actions"><button class="primary" type="submit">Отправить комментарий</button></div>
+      </form>
+    </div></section>
+  </div>
+  <div class="details-column">
+    {% if user.role != 'requester' %}
+    <section class="panel" aria-labelledby="ticket-control-title"><div class="panel-body"><h2 id="ticket-control-title" class="panel-title">Обработка заявки</h2>
+      <form method="post" action="/tickets/{{ ticket.id }}/update" class="stack">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label for="new-status">Статус<select id="new-status" name="status"><option value="{{ ticket.status }}">{{ statuses[ticket.status] }}</option>{% for key in transitions | sort %}<option value="{{ key }}">{{ statuses[key] }}</option>{% endfor %}</select></label>
+        <label for="new-assignee">Исполнитель<select id="new-assignee" name="assignee_id"><option value="">Не назначен</option>{% for member in assignees %}<option value="{{ member.id }}" {% if member.id == ticket.assignee_id %}selected{% endif %}>{{ member.full_name }}</option>{% endfor %}</select></label>
+        <button class="primary" type="submit">Сохранить изменения</button>
+      </form>
+    </div></section>
+    {% endif %}
+    <section class="panel" aria-labelledby="ticket-history-title"><div class="panel-body"><h2 id="ticket-history-title">История изменений</h2>
+      <div class="history">{% for event in events %}
+        <div class="history-entry"><strong>{{ event.actor_name or 'Система' }}</strong><time>{{ event.created_at }}</time><p>{{ event.details }}</p></div>
+      {% else %}<p class="section-note">Изменений пока нет.</p>{% endfor %}</div>
+    </div></section>
+  </div>
+</div>
 {% endblock %}

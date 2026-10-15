@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="eyebrow">АДМИНИСТРИРОВАНИЕ</div><h1>Пользователи</h1><p class="muted">Учетные записи и права доступа</p>
-<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Логин</th><th>ФИО</th><th>Роль</th><th>Состояние</th></tr></thead><tbody>{% for member in users %}<tr><td><strong>{{ member.username }}</strong></td><td>{{ member.full_name }}</td><td>{{ roles[member.role] }}</td><td>{{ 'Активен' if member.active else 'Отключен' }}</td></tr>{% endfor %}</tbody></table></div></section>
-<section class="panel padded narrow"><h2>Новый пользователь</h2><form action="/users" method="post" class="stack gap-lg"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><div class="form-grid"><label>Логин<input name="username" required minlength="3" maxlength="40"></label><label>ФИО<input name="full_name" required maxlength="120"></label><label>Роль<select name="role">{% for key,label in roles.items() %}<option value="{{ key }}">{{ label }}</option>{% endfor %}</select></label><label>Начальный пароль<input type="password" name="password" minlength="10" required></label></div><button class="primary align-self">Создать</button></form></section>
+<div class="page-head"><div><p class="section-label">Администрирование</p><h1>Пользователи</h1><p class="page-description">Учетные записи и роли сотрудников.</p></div></div>
+<section class="panel" aria-label="Список пользователей">
+  <div class="table-wrap"><table class="data-table">
+    <thead><tr><th scope="col">Логин</th><th scope="col">ФИО</th><th scope="col">Роль</th><th scope="col">Состояние</th></tr></thead>
+    <tbody>{% for member in users %}<tr><td class="table-strong">{{ member.username }}</td><td>{{ member.full_name }}</td><td>{{ roles[member.role] }}</td><td>{{ 'Активен' if member.active else 'Отключен' }}</td></tr>{% else %}<tr><td colspan="4" class="empty-cell">Пользователи не найдены</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+<section class="panel narrow" aria-labelledby="new-user-title">
+  <div class="field-panel"><h2 id="new-user-title">Добавить пользователя</h2>
+    <form action="/users" method="post" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="form-grid">
+        <label for="user-login">Логин<input id="user-login" name="username" required minlength="3" maxlength="40" autocomplete="off" placeholder="Например, ivanov"></label>
+        <label for="user-fullname">ФИО<input id="user-fullname" name="full_name" required maxlength="120" placeholder="Фамилия Имя Отчество"></label>
+        <label for="user-role">Роль<select id="user-role" name="role">{% for key,label in roles.items() %}<option value="{{ key }}">{{ label }}</option>{% endfor %}</select></label>
+        <label for="user-pass">Начальный пароль<input id="user-pass" type="password" name="password" minlength="10" required autocomplete="new-password"><span class="hint">Не менее 10 символов</span></label>
+      </div>
+      <div class="form-actions"><button class="primary" type="submit">Создать пользователя</button></div>
+    </form>
+  </div>
+</section>
 {% endblock %}

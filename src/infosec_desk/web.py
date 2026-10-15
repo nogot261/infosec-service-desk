@@ -86,6 +86,10 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
             raise HTTPException(status_code=403, detail="Ошибка проверки формы. Обновите страницу")
         return data
 
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon():
+        return RedirectResponse("/static/favicon.svg", status_code=307)
+
     @app.get("/health")
     def health():
         with connect(db_path) as db:
@@ -277,11 +281,22 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
     async def handle_http_error(request: Request, exc: HTTPException):
         if exc.status_code == 401 and request.url.path != "/login":
             return RedirectResponse("/login", status_code=303)
-        return HTMLResponse(
-            f"<html lang='ru'><meta charset='utf-8'><title>Ошибка</title>"
-            f"<body style='font:16px Arial;margin:4em'><h1>Ошибка {exc.status_code}</h1>"
-            f"<p>{'Недостаточно прав' if exc.status_code == 403 else 'Страница не найдена'}</p>"
-            "<a href='/'>На главную</a></body></html>",
+        if exc.status_code == 403:
+            title = "Недостаточно прав"
+            explanation = "Для просмотра этого раздела нужна другая роль."
+        elif exc.status_code == 404:
+            title = "Страница не найдена"
+            explanation = "Проверьте адрес или вернитесь к списку заявок."
+        else:
+            title, explanation = "Ошибка запроса", "Не удалось выполнить запрошенное действие."
+        return templates.TemplateResponse(
+            request,
+            "error.html",
+            {
+                "title": title, "explanation": explanation, "status_code": exc.status_code,
+                "user": current_user(request), "csrf_token": request.session.get("csrf_token", ""),
+                "message": "", "error": "",
+            },
             status_code=exc.status_code,
         )
 

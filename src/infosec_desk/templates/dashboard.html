@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="heading-row"><div><div class="eyebrow">ОБЩАЯ ИНФОРМАЦИЯ</div><h1>Панель управления</h1><p class="muted">Текущее состояние заявок и обращений</p></div><a class="primary button" href="/tickets/new">+ Новая заявка</a></div>
-<div class="stat-grid">
-  <div class="stat-card"><span>Всего заявок</span><strong>{{ stats.total }}</strong><small>За весь период</small></div>
-  <div class="stat-card"><span>Активные заявки</span><strong>{{ stats.open }}</strong><small>Требуют обработки</small></div>
-  <div class="stat-card"><span>Решенные и закрытые</span><strong>{{ stats.resolved }}</strong><small>Завершенные обращения</small></div>
-  <div class="stat-card"><span>Критический приоритет</span><strong>{{ stats.critical }}</strong><small>Не закрыты</small></div>
+<div class="page-head">
+  <div><p class="section-label">Учет обращений</p><h1>Обзор заявок</h1><p class="page-description">Сводка по обращениям и их текущему состоянию.</p></div>
+  <a class="button primary" href="/tickets/new">Создать заявку</a>
 </div>
-<section class="panel"><div class="panel-header"><div><h2>Последние заявки</h2><p class="muted">Недавно зарегистрированные обращения</p></div><a href="/tickets" class="text-link">Все заявки →</a></div><div class="table-wrap">{% include '_table.html' %}</div></section>
-<div class="bottom-tip"><strong>Работа с заявками</strong><span>Регистрируйте обращения, отслеживайте исполнителей и историю изменений в карточке заявки.</span></div>
+<div class="stats" aria-label="Показатели обработки заявок">
+  <div class="metric"><span class="metric-label">Всего заявок</span><strong class="metric-value">{{ stats.total }}</strong><span class="metric-note">Зарегистрировано</span></div>
+  <div class="metric"><span class="metric-label">В работе и ожидают</span><strong class="metric-value">{{ stats.open }}</strong><span class="metric-note">Не завершены</span></div>
+  <div class="metric"><span class="metric-label">Решены и закрыты</span><strong class="metric-value">{{ stats.resolved }}</strong><span class="metric-note">Завершенные обращения</span></div>
+  <div class="metric metric-critical"><span class="metric-label">Критический приоритет</span><strong class="metric-value">{{ stats.critical }}</strong><span class="metric-note">Не закрыты</span></div>
+</div>
+<section class="panel" aria-labelledby="recent-title">
+  <header class="panel-header"><div><h2 id="recent-title">Последние заявки</h2><p>В порядке регистрации, от новых к старым</p></div><a class="text-link" href="/tickets">Перейти к реестру</a></header>
+  <div class="table-wrap">{% include '_table.html' %}</div>
+</section>
 {% endblock %}

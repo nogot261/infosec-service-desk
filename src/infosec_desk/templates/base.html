@@ -3,35 +3,64 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ title }} | Служба защиты информации</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta name="theme-color" content="#ffffff">
+  <title>{{ title }} | InfoSec Desk</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=2">
 </head>
 <body>
+<a class="skip-link" href="#main-content">К основному содержанию</a>
 <div class="layout">
   {% if user %}
-  <aside class="sidebar">
-    <div class="brand"><span class="brand-mark">S</span><div><strong>InfoSec Desk</strong><small>Обслуживание систем защиты</small></div></div>
-    <div class="sidebar-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
-    <nav class="menu">
-      <a href="/" class="{{ 'active' if request.url.path == '/' else '' }}"><span class="menu-icon">▦</span>Обзор</a>
-      <a href="/tickets" class="{{ 'active' if request.url.path.startswith('/tickets') else '' }}"><span class="menu-icon">☷</span>Заявки</a>
-      <a href="/assets" class="{{ 'active' if request.url.path == '/assets' else '' }}"><span class="menu-icon">▣</span>Средства защиты</a>
+  <aside class="sidebar" aria-label="Навигация">
+    <a class="brand" href="/" aria-label="InfoSec Desk, на главную">
+      <span class="brand-mark" aria-hidden="true">IS</span>
+      <span><strong>InfoSec Desk</strong><small>Служба защиты информации</small></span>
+    </a>
+    <div class="sidebar-label">Разделы</div>
+    <nav class="menu" aria-label="Главное меню">
+      <a href="/" class="{{ 'active' if request.url.path == '/' else '' }}" {% if request.url.path == '/' %}aria-current="page"{% endif %}>
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.4"/><rect x="13" y="3" width="8" height="8" rx="1.4"/><rect x="3" y="13" width="8" height="8" rx="1.4"/><rect x="13" y="13" width="8" height="8" rx="1.4"/></svg>
+        Обзор
+      </a>
+      <a href="/tickets" class="{{ 'active' if request.url.path.startswith('/tickets') else '' }}" {% if request.url.path.startswith('/tickets') %}aria-current="page"{% endif %}>
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h14M7 12h14M7 19h14"/><path d="M3 5h.01M3 12h.01M3 19h.01"/></svg>
+        Заявки
+      </a>
+      <a href="/assets" class="{{ 'active' if request.url.path == '/assets' else '' }}" {% if request.url.path == '/assets' %}aria-current="page"{% endif %}>
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>
+        Средства защиты
+      </a>
       {% if user.role == 'admin' %}
-      <a href="/users" class="{{ 'active' if request.url.path == '/users' else '' }}"><span class="menu-icon">♙</span>Пользователи</a>
-      <a href="/audit" class="{{ 'active' if request.url.path == '/audit' else '' }}"><span class="menu-icon">≡</span>Журнал действий</a>
+      <a href="/users" class="{{ 'active' if request.url.path == '/users' else '' }}" {% if request.url.path == '/users' %}aria-current="page"{% endif %}>
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 8h4M19 6v4"/></svg>
+        Пользователи
+      </a>
+      <a href="/audit" class="{{ 'active' if request.url.path == '/audit' else '' }}" {% if request.url.path == '/audit' %}aria-current="page"{% endif %}>
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h14M7 10h14M7 16h10M3 4h.01M3 10h.01M3 16h.01"/></svg>
+        Журнал действий
+      </a>
       {% endif %}
     </nav>
-    <div class="side-bottom"><div class="avatar">{{ user.full_name[0] }}</div><div class="profile"><strong>{{ user.full_name }}</strong><small>{{ roles[user.role] }}</small></div></div>
-    <form action="/logout" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="logout" type="submit">Выйти из системы</button></form>
+    <div class="account-panel">
+      <div class="account-row">
+        <span class="avatar" aria-hidden="true">{{ user.full_name[:1] | upper }}</span>
+        <div class="profile"><strong title="{{ user.full_name }}">{{ user.full_name }}</strong><small>{{ roles[user.role] }}</small></div>
+      </div>
+      <form method="post" action="/logout">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="logout" type="submit">Выйти</button>
+      </form>
+    </div>
   </aside>
   {% endif %}
-  <main class="content {{ 'login-layout' if not user else '' }}">
+  <main class="content {{ 'login-layout' if not user else '' }}" id="main-content">
     {% if user %}
-    <header class="topbar"><span>Система учета заявок на обслуживание систем защиты информации</span><span class="live">Локальная система</span></header>
+    <header class="topbar"><div class="topbar-path"><span>InfoSec Desk</span><span class="topbar-divider">/</span><strong>{{ title }}</strong></div><span class="topbar-user">{{ user.username }}</span></header>
     {% endif %}
     <div class="page">
-      {% if message %}<div class="notice success">{{ message }}</div>{% endif %}
-      {% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+      {% if message %}<div class="notice success" role="status">{{ message }}</div>{% endif %}
+      {% if error %}<div class="notice error" role="alert">{{ error }}</div>{% endif %}
       {% block content %}{% endblock %}
     </div>
   </main>

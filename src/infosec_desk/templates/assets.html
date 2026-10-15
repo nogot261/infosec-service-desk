@@ -1,6 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="eyebrow">ИНВЕНТАРИЗАЦИЯ</div><h1>Средства защиты</h1><p class="muted">Объекты обслуживания, связанные с заявками</p>
-<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Инвентарный номер</th><th>Наименование</th><th>Местоположение</th><th>Класс защиты</th></tr></thead><tbody>{% for asset in assets %}<tr><td><strong>{{ asset.inventory_no }}</strong></td><td>{{ asset.name }}</td><td>{{ asset.location }}</td><td>{{ asset.protection_class }}</td></tr>{% else %}<tr><td colspan="4" class="empty">Объекты не добавлены</td></tr>{% endfor %}</tbody></table></div></section>
-{% if user.role == 'admin' %}<section class="panel padded narrow"><h2>Добавить средство защиты</h2><form action="/assets" method="post" class="stack gap-lg"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><div class="form-grid"><label>Инвентарный номер<input name="inventory_no" maxlength="32" required></label><label>Наименование<input name="name" maxlength="120" required></label><label>Местоположение<input name="location" maxlength="120" required></label><label>Класс защиты<input name="protection_class" maxlength="80" required></label></div><label>Описание<textarea name="description" maxlength="1000" rows="2"></textarea></label><button class="primary align-self">Добавить</button></form></section>{% endif %}
+<div class="page-head"><div><p class="section-label">Справочники</p><h1>Средства защиты</h1><p class="page-description">Учет объектов, по которым поступают обращения.</p></div></div>
+<section class="panel" aria-label="Список средств защиты">
+  <div class="table-wrap"><table class="data-table">
+    <thead><tr><th scope="col">Инвентарный номер</th><th scope="col">Наименование</th><th scope="col">Расположение</th><th scope="col">Класс защиты</th></tr></thead>
+    <tbody>{% for asset in assets %}
+      <tr><td><span class="table-strong">{{ asset.inventory_no }}</span></td><td>{{ asset.name }}</td><td>{{ asset.location }}</td><td>{{ asset.protection_class }}</td></tr>
+    {% else %}
+      <tr><td colspan="4" class="empty-cell"><div class="empty-state"><strong>Средств защиты пока нет</strong><p>Добавьте объект, чтобы связывать его с заявками на обслуживание.</p></div></td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+</section>
+{% if user.role == 'admin' %}
+<section class="panel narrow" aria-labelledby="new-asset-heading">
+  <div class="field-panel"><h2 id="new-asset-heading">Добавить средство защиты</h2>
+    <form action="/assets" method="post" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="form-grid">
+        <label for="inventory-no">Инвентарный номер<input id="inventory-no" name="inventory_no" maxlength="32" required placeholder="Например, FW-001"></label>
+        <label for="asset-name">Наименование<input id="asset-name" name="name" maxlength="120" required placeholder="Например, межсетевой экран"></label>
+        <label for="asset-location">Расположение<input id="asset-location" name="location" maxlength="120" required placeholder="Корпус, кабинет"></label>
+        <label for="asset-class">Класс защиты<input id="asset-class" name="protection_class" maxlength="80" required placeholder="Например, сетевая защита"></label>
+      </div>
+      <label for="asset-description">Описание <span class="hint">Необязательно</span><textarea id="asset-description" name="description" maxlength="1000" rows="3"></textarea></label>
+      <div class="form-actions"><button class="primary" type="submit">Сохранить объект</button></div>
+    </form>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

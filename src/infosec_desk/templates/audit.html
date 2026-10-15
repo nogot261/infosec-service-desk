@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="eyebrow">КОНТРОЛЬ ИСТОРИИ</div><h1>Журнал действий</h1><p class="muted">Последние 100 зарегистрированных событий</p>
-<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Дата и время</th><th>Пользователь</th><th>Событие</th><th>Заявка</th><th>Подробности</th></tr></thead><tbody>{% for item in events %}<tr><td>{{ item.created_at }}</td><td>{{ item.actor_name or 'Система' }}</td><td>{{ item.action }}</td><td>{% if item.ticket_id %}<a href="/tickets/{{ item.ticket_id }}">{{ item.ticket_id | ticket_no }}</a>{% else %}-{% endif %}</td><td>{{ item.details }}</td></tr>{% else %}<tr><td class="empty" colspan="5">Событий пока нет</td></tr>{% endfor %}</tbody></table></div></section>
+<div class="page-head"><div><p class="section-label">Администрирование</p><h1>Журнал действий</h1><p class="page-description">Последние 100 событий системы.</p></div></div>
+<section class="panel" aria-label="Журнал действий">
+  <div class="table-wrap"><table class="data-table">
+    <thead><tr><th scope="col">Дата и время</th><th scope="col">Пользователь</th><th scope="col">Действие</th><th scope="col">Заявка</th><th scope="col">Подробности</th></tr></thead>
+    <tbody>{% for item in events %}
+      <tr><td class="nowrap">{{ item.created_at }}</td><td>{{ item.actor_name or 'Система' }}</td><td>{{ {'created':'Регистрация заявки', 'commented':'Комментарий', 'updated':'Изменение заявки', 'password_reset':'Смена пароля'}.get(item.action,item.action) }}</td><td>{% if item.ticket_id %}<a class="text-link" href="/tickets/{{ item.ticket_id }}">{{ item.ticket_id | ticket_no }}</a>{% else %} - {% endif %}</td><td>{{ item.details }}</td></tr>
+    {% else %}<tr><td colspan="5" class="empty-cell"><div class="empty-state"><strong>Событий пока нет</strong><p>Операции пользователей будут отражаться здесь.</p></div></td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
 {% endblock %}

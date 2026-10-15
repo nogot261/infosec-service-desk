@@ -76,9 +76,9 @@ def main():
         print("Администратор создан")
         return
     if args.command == "reset-password":
-        password = getpass.getpass("Новый пароль (минимум 10 символов): ")
-        confirmation = getpass.getpass("Повторите новый пароль: ")
-        if password != confirmation:
+        password = getpass.getpass("Новый пароль (не менее 10 символов): ")
+        confirm = getpass.getpass("Повторите пароль: ")
+        if password != confirm:
             parser.error("Пароли не совпадают")
         try:
             reset_admin_password(db_path, args.username, password)

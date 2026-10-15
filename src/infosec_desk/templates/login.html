@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="login-box">
-  <div class="login-brand"><span class="brand-mark">S</span> InfoSec Desk</div>
-  <h1>Вход в систему</h1>
-  <p class="muted">Учет заявок на обслуживание систем защиты информации</p>
-  <form method="post" action="/login" class="stack gap-lg">
+<section class="login-box" aria-labelledby="login-heading">
+  <div class="login-brand"><span class="brand-mark" aria-hidden="true">IS</span>InfoSec Desk</div>
+  <h1 id="login-heading">Вход в систему</h1>
+  <p class="page-description">Введите данные своей учетной записи.</p>
+  <form method="post" action="/login" class="stack">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <label>Логин<input name="username" required maxlength="40" autocomplete="username" autofocus></label>
-    <label>Пароль<input type="password" name="password" required autocomplete="current-password"></label>
-    <button class="primary wide">Войти</button>
+    <label for="login-name">Логин<input id="login-name" name="username" required maxlength="40" autocomplete="username" autofocus></label>
+    <label for="login-pass">Пароль<input id="login-pass" type="password" name="password" required autocomplete="current-password"></label>
+    <button class="primary full-width" type="submit">Войти</button>
   </form>
-  <p class="muted small">Доступ предоставляется зарегистрированным пользователям.</p>
+  <p class="login-footer">Если доступа нет, обратитесь к администратору системы.</p>
 </section>
 {% endblock %}

@@ -45,20 +45,20 @@ def create_user(db_path, username, full_name, password, role="requester"):
 
 
 def reset_admin_password(db_path, username, password):
-    """Смена пароля администратора через локальную консоль."""
+    """Меняет пароль администратора при локальном доступе к БД."""
     username = clean_text(username, "Логин", minimum=3, maximum=40).lower()
     hashed = password_hash(password)
     with transaction(db_path) as db:
         user = db.execute(
-            "SELECT id,role FROM users WHERE username=? COLLATE NOCASE AND active=1",
+            "SELECT id, role FROM users WHERE username=? COLLATE NOCASE AND active=1",
             (username,),
         ).fetchone()
         if user is None or user["role"] != "admin":
-            raise ValueError("Активный администратор с таким логином не найден")
+            raise ValueError("Активный администратор не найден")
         db.execute("UPDATE users SET password_hash=? WHERE id=?", (hashed, user["id"]))
         db.execute(
-            "INSERT INTO audit_events(actor_id,action,details) VALUES(NULL,?,?)",
-            ("password_reset", f"Пароль администратора {username} изменен локально"),
+            "INSERT INTO audit_events(actor_id, action, details) VALUES(?,?,?)",
+            (None, "password_reset", f"Пароль администратора {username} изменен локально"),
         )
 
 
@@ -229,13 +229,30 @@ def update_ticket(db_path, user, ticket_id, status, assignee_id):
 
 
 def statistics(db_path, user):
-    tickets = list_tickets(db_path, user)
+    """Подсчитывает показатели SQL-запросом без ограничения реестра в 500 строк."""
+    condition = "WHERE author_id=?" if user["role"] == "requester" else ""
+    params = (user["id"],) if condition else ()
+    with connect(db_path) as db:
+        row = db.execute(
+            f"""SELECT COUNT(*) AS total,
+                SUM(CASE WHEN status NOT IN ('resolved','closed') THEN 1 ELSE 0 END) AS open,
+                SUM(CASE WHEN status IN ('resolved','closed') THEN 1 ELSE 0 END) AS resolved,
+                SUM(CASE WHEN priority='critical' AND status!='closed' THEN 1 ELSE 0 END)
+                    AS critical
+            FROM tickets {condition}""",
+            params,
+        ).fetchone()
+        by_status = db.execute(
+            f"SELECT status, COUNT(*) AS total FROM tickets {condition} GROUP BY status",
+            params,
+        ).fetchall()
+    counts = {item["status"]: item["total"] for item in by_status}
     return {
-        "total": len(tickets),
-        "open": sum(t["status"] not in ("resolved", "closed") for t in tickets),
-        "resolved": sum(t["status"] in ("resolved", "closed") for t in tickets),
-        "critical": sum(t["priority"] == "critical" and t["status"] != "closed" for t in tickets),
-        "by_status": {key: sum(t["status"] == key for t in tickets) for key in STATUSES},
+        "total": row["total"],
+        "open": row["open"],
+        "resolved": row["resolved"],
+        "critical": row["critical"],
+        "by_status": {key: counts.get(key, 0) for key in STATUSES},
     }
 
 

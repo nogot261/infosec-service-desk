@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel narrow"><div class="panel-body">
+  <p class="section-label">Ошибка {{ status_code }}</p>
+  <h1 class="page-title">{{ title }}</h1>
+  <p class="page-description">{{ explanation }}</p>
+  <div class="form-actions error-actions"><a class="button secondary" href="/">Вернуться на главную</a></div>
+</div></section>
+{% endblock %}

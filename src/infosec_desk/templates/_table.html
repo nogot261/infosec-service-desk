@@ -1,15 +1,22 @@
 <table class="data-table">
-  <thead><tr><th>Заявка</th><th>Категория</th><th>Приоритет</th><th>Статус</th><th>Исполнитель</th><th>Создана</th></tr></thead>
+  <thead><tr><th scope="col">Заявка</th><th scope="col">Категория</th><th scope="col">Приоритет</th><th scope="col">Статус</th><th scope="col">Исполнитель</th><th scope="col">Создана</th></tr></thead>
   <tbody>
   {% for t in tickets %}
   <tr>
-    <td class="ticket-cell"><a href="/tickets/{{ t.id }}"><strong>{{ t.id | ticket_no }}</strong><span>{{ t.title }}</span></a></td>
+    <td><a class="ticket-link" href="/tickets/{{ t.id }}"><small>{{ t.id | ticket_no }}</small><strong>{{ t.title }}</strong></a></td>
     <td>{{ categories[t.category] }}</td>
     <td><span class="priority priority-{{ t.priority }}">{{ priorities[t.priority] }}</span></td>
-    <td><span class="status status-{{ t.status }}">{{ statuses[t.status] }}</span></td>
+    <td><span class="badge badge-{{ t.status }}">{{ statuses[t.status] }}</span></td>
     <td>{{ t.assignee_name or 'Не назначен' }}</td>
-    <td>{{ t.created_at[:16] }}</td>
+    <td class="nowrap">{{ t.created_at[:16] }}</td>
   </tr>
-  {% else %}<tr><td colspan="6" class="empty">Заявок пока нет</td></tr>{% endfor %}
+  {% else %}
+  <tr><td colspan="6" class="empty-cell"><div class="empty-state">
+    <div class="empty-symbol" aria-hidden="true">≡</div>
+    <strong>Заявок не найдено</strong>
+    <p>Создайте первую заявку или измените параметры поиска.</p>
+    <a class="button secondary" href="/tickets/new">Создать заявку</a>
+  </div></td></tr>
+  {% endfor %}
   </tbody>
 </table>
