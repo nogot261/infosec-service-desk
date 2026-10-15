@@ -21,13 +21,25 @@ def test_login_and_logout(client):
 
 
 def test_login_rejects_bad_password(client):
-    response = client.post("/login", data={"csrf_token": csrf(client), "username": "alice", "password": "bad"}, follow_redirects=True)
+    response = client.post(
+        "/login",
+        data={"csrf_token": csrf(client), "username": "alice", "password": "bad"},
+        follow_redirects=True,
+    )
     assert "Неверный логин или пароль" in response.text
 
 
 def test_csrf_rejects_missing_token(client):
     login(client)
-    response = client.post("/tickets", data={"title": "Проверка доступа", "description": "Проверка защиты с требуемой длиной", "category": "access", "priority": "normal"})
+    response = client.post(
+        "/tickets",
+        data={
+            "title": "Проверка доступа",
+            "description": "Проверка защиты с требуемой длиной",
+            "category": "access",
+            "priority": "normal",
+        },
+    )
     assert response.status_code == 403
 
 

@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 from infosec_desk.db import connect
-from infosec_desk.security import verify_password
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -48,6 +47,7 @@ def test_bootstrap_password_is_random_and_hashed(tmp_path, monkeypatch):
 
 def test_no_exposing_service_without_secret(tmp_path, monkeypatch):
     import pytest
+
     from infosec_desk import __main__
 
     path = tmp_path / "service.sqlite3"

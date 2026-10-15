@@ -8,7 +8,7 @@ import sqlite3
 from pathlib import Path
 
 from .db import connect, initialize
-from .service import add_asset, create_ticket, create_user, find_user
+from .service import add_asset, create_ticket, create_user
 
 
 def seed_demo(db_path):
@@ -46,8 +46,14 @@ def _users(db_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Учет заявок на обслуживание средств защиты информации")
-    parser.add_argument("command", nargs="?", choices=["serve", "init-db", "create-admin", "seed-demo"], default="serve")
+    parser = argparse.ArgumentParser(
+        description="Учет заявок на обслуживание средств защиты информации"
+    )
+    parser.add_argument(
+        "command", nargs="?",
+        choices=["serve", "init-db", "create-admin", "seed-demo"],
+        default="serve",
+    )
     parser.add_argument("--db", default=os.getenv("INFOSEC_DB_PATH", "instance/infosec.sqlite3"))
     parser.add_argument("--host", default=os.getenv("INFOSEC_HOST", "127.0.0.1"))
     parser.add_argument("--port", type=int, default=int(os.getenv("INFOSEC_PORT", "8000")))
@@ -72,6 +78,7 @@ def main():
         seed_demo(db_path)
         return
     import uvicorn
+
     from .web import create_app
 
     with connect(db_path) as db:

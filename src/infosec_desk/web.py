@@ -24,7 +24,10 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
     db_path = Path(db_path or os.getenv("INFOSEC_DB_PATH", "instance/infosec.sqlite3")).resolve()
     initialize(db_path)
 
-    app = FastAPI(title="Учет заявок на обслуживание систем защиты информации", docs_url=None, redoc_url=None)
+    app = FastAPI(
+        title="Учет заявок на обслуживание систем защиты информации",
+        docs_url=None, redoc_url=None,
+    )
     app.state.db_path = db_path
     app.add_middleware(
         SessionMiddleware,
@@ -98,7 +101,9 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
     @app.post("/login")
     async def login_post(request: Request):
         data = await secure_form(request)
-        user = service.authenticate(db_path, str(data.get("username", "")), str(data.get("password", "")))
+        user = service.authenticate(
+            db_path, str(data.get("username", "")), str(data.get("password", ""))
+        )
         if user is None:
             return flash_redirect(request, "/login", error="Неверный логин или пароль")
         request.session.clear()
@@ -135,7 +140,9 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
     @app.get("/tickets/new", response_class=HTMLResponse)
     def new_ticket_page(request: Request):
         require_user(request)
-        return render(request, "ticket_new.html", title="Новая заявка", assets=service.assets(db_path))
+        return render(
+            request, "ticket_new.html", title="Новая заявка", assets=service.assets(db_path)
+        )
 
     @app.post("/tickets")
     async def create_ticket_post(request: Request):
@@ -183,7 +190,9 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
         data = await secure_form(request)
         try:
             assignee_id = int(data["assignee_id"]) if data.get("assignee_id") else None
-            service.update_ticket(db_path, user, ticket_id, str(data.get("status", "")), assignee_id)
+            service.update_ticket(
+                db_path, user, ticket_id, str(data.get("status", "")), assignee_id
+            )
         except (ValueError, sqlite3.IntegrityError) as exc:
             return flash_redirect(request, f"/tickets/{ticket_id}", error=str(exc))
         return flash_redirect(request, f"/tickets/{ticket_id}", message="Изменения сохранены")
@@ -191,7 +200,9 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
     @app.get("/assets", response_class=HTMLResponse)
     def assets_page(request: Request):
         require_user(request)
-        return render(request, "assets.html", title="Средства защиты", assets=service.assets(db_path))
+        return render(
+            request, "assets.html", title="Средства защиты", assets=service.assets(db_path)
+        )
 
     @app.post("/assets")
     async def assets_post(request: Request):
@@ -222,13 +233,17 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
                 str(data.get("password", "")), str(data.get("role", "requester")),
             )
         except (ValueError, sqlite3.IntegrityError) as exc:
-            return flash_redirect(request, "/users", error=f"Не удалось создать учетную запись: {exc}")
+            return flash_redirect(
+                request, "/users", error=f"Не удалось создать учетную запись: {exc}"
+            )
         return flash_redirect(request, "/users", message="Пользователь создан")
 
     @app.get("/audit", response_class=HTMLResponse)
     def audit_page(request: Request):
         require_user(request, {"admin"})
-        return render(request, "audit.html", title="Журнал действий", events=service.audit_events(db_path))
+        return render(
+            request, "audit.html", title="Журнал действий", events=service.audit_events(db_path)
+        )
 
     @app.get("/export.csv")
     def csv_export(request: Request):
@@ -236,17 +251,26 @@ def create_app(db_path: str | Path | None = None, secret_key: str | None = None)
         records = service.list_tickets(db_path, user)
         buf = io.StringIO()
         writer = csv.writer(buf, delimiter=";")
-        writer.writerow(["Номер", "Тема", "Категория", "Приоритет", "Статус", "Автор", "Исполнитель", "Создана"])
+        writer.writerow(
+            ["Номер", "Тема", "Категория", "Приоритет", "Статус",
+             "Автор", "Исполнитель", "Создана"]
+        )
         for row in records:
             values = [
                 f"З-{row['id']:06d}", row["title"], service.CATEGORIES[row["category"]],
                 service.PRIORITIES[row["priority"]], service.STATUSES[row["status"]],
                 row["author_name"], row["assignee_name"] or "", row["created_at"],
             ]
-            writer.writerow(["'" + str(v) if str(v).startswith(("=", "+", "-", "@")) else v for v in values])
+            writer.writerow(
+                ["'" + str(v) if str(v).startswith(("=", "+", "-", "@")) else v
+                 for v in values]
+            )
         return Response(
             "\ufeff" + buf.getvalue(), media_type="text/csv; charset=utf-8",
-            headers={"Content-Disposition": 'attachment; filename="infosec_tickets.csv"', "Cache-Control": "no-store"},
+            headers={
+                "Content-Disposition": 'attachment; filename="infosec_tickets.csv"',
+                "Cache-Control": "no-store",
+            },
         )
 
     @app.exception_handler(HTTPException)

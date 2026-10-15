@@ -57,7 +57,9 @@ def authenticate(db_path, username, password):
 
 def find_user(db_path, user_id):
     with connect(db_path) as db:
-        row = db.execute("SELECT id,username,full_name,role,active FROM users WHERE id=?", (user_id,)).fetchone()
+        row = db.execute(
+            "SELECT id,username,full_name,role,active FROM users WHERE id=?", (user_id,)
+        ).fetchone()
     return dict(row) if row and row["active"] else None
 
 
@@ -81,7 +83,8 @@ def add_asset(db_path, inventory_no, name, location, protection_class, descripti
     description = clean_text(description, "Описание", minimum=0, maximum=1000)
     with transaction(db_path) as db:
         cursor = db.execute(
-            "INSERT INTO assets(inventory_no,name,location,protection_class,description) VALUES(?,?,?,?,?)",
+            "INSERT INTO assets(inventory_no,name,location,protection_class,description) "
+            "VALUES(?,?,?,?,?)",
             (inventory_no, name, location, protection_class, description),
         )
         return cursor.lastrowid
@@ -136,8 +139,10 @@ def create_ticket(db_path, user, title, description, category, priority, asset_i
     if category not in CATEGORIES or priority not in PRIORITIES:
         raise ValueError("Недопустимая категория или приоритет")
     with transaction(db_path) as db:
-        if asset_id is not None and not db.execute("SELECT 1 FROM assets WHERE id=?", (asset_id,)).fetchone():
-            raise ValueError("Средство защиты не найдено")
+        if asset_id is not None:
+            asset = db.execute("SELECT 1 FROM assets WHERE id=?", (asset_id,)).fetchone()
+            if asset is None:
+                raise ValueError("Средство защиты не найдено")
         cursor = db.execute(
             """INSERT INTO tickets(title,description,category,priority,asset_id,author_id)
                VALUES(?,?,?,?,?,?)""",
@@ -172,7 +177,9 @@ def update_ticket(db_path, user, ticket_id, status, assignee_id):
     if status not in STATUSES:
         raise ValueError("Недопустимый статус")
     with transaction(db_path) as db:
-        current = db.execute("SELECT status,assignee_id FROM tickets WHERE id=?", (ticket_id,)).fetchone()
+        current = db.execute(
+            "SELECT status,assignee_id FROM tickets WHERE id=?", (ticket_id,)
+        ).fetchone()
         if not current:
             raise ValueError("Заявка не найдена")
         if status != current["status"] and status not in TRANSITIONS[current["status"]]:
@@ -181,7 +188,10 @@ def update_ticket(db_path, user, ticket_id, status, assignee_id):
             assignee = db.execute(
                 "SELECT role,active FROM users WHERE id=?", (assignee_id,)
             ).fetchone()
-            if not assignee or not assignee["active"] or assignee["role"] not in {"operator", "admin"}:
+            if (
+                not assignee or not assignee["active"]
+                or assignee["role"] not in {"operator", "admin"}
+            ):
                 raise ValueError("Исполнителем может быть только активный специалист")
         if status == current["status"] and assignee_id == current["assignee_id"]:
             return
@@ -190,7 +200,10 @@ def update_ticket(db_path, user, ticket_id, status, assignee_id):
                closed_at=CASE WHEN ?='closed' THEN datetime('now') ELSE NULL END WHERE id=?""",
             (status, assignee_id, status, ticket_id),
         )
-        details = f"Статус: {current['status']} -> {status}; исполнитель: {current['assignee_id']} -> {assignee_id}"
+        details = (
+            f"Статус: {current['status']} -> {status}; "
+            f"исполнитель: {current['assignee_id']} -> {assignee_id}"
+        )
         db.execute(
             "INSERT INTO audit_events(actor_id,ticket_id,action,details) VALUES(?,?,?,?)",
             (user["id"], ticket_id, "updated", details),
