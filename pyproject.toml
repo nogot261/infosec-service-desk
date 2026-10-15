@@ -26,7 +26,7 @@ infosec-desk = "infosec_desk.__main__:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-infosec_desk = ["templates/*.html", "static/*.css"]
+infosec_desk = ["templates/*.html", "static/*.css", "static/*.svg"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
