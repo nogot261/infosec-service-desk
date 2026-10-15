@@ -44,6 +44,24 @@ def create_user(db_path, username, full_name, password, role="requester"):
         return cursor.lastrowid
 
 
+def reset_admin_password(db_path, username, password):
+    """Смена пароля администратора через локальную консоль."""
+    username = clean_text(username, "Логин", minimum=3, maximum=40).lower()
+    hashed = password_hash(password)
+    with transaction(db_path) as db:
+        user = db.execute(
+            "SELECT id,role FROM users WHERE username=? COLLATE NOCASE AND active=1",
+            (username,),
+        ).fetchone()
+        if user is None or user["role"] != "admin":
+            raise ValueError("Активный администратор с таким логином не найден")
+        db.execute("UPDATE users SET password_hash=? WHERE id=?", (hashed, user["id"]))
+        db.execute(
+            "INSERT INTO audit_events(actor_id,action,details) VALUES(NULL,?,?)",
+            ("password_reset", f"Пароль администратора {username} изменен локально"),
+        )
+
+
 def authenticate(db_path, username, password):
     from .security import verify_password
 

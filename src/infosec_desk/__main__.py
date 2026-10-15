@@ -8,7 +8,7 @@ import sqlite3
 from pathlib import Path
 
 from .db import connect, initialize
-from .service import add_asset, create_ticket, create_user
+from .service import add_asset, create_ticket, create_user, reset_admin_password
 
 
 def seed_demo(db_path):
@@ -51,9 +51,10 @@ def main():
     )
     parser.add_argument(
         "command", nargs="?",
-        choices=["serve", "init-db", "create-admin", "seed-demo"],
+        choices=["serve", "init-db", "create-admin", "reset-password", "seed-demo"],
         default="serve",
     )
+    parser.add_argument("--username", default="admin")
     parser.add_argument("--db", default=os.getenv("INFOSEC_DB_PATH", "instance/infosec.sqlite3"))
     parser.add_argument("--host", default=os.getenv("INFOSEC_HOST", "127.0.0.1"))
     parser.add_argument("--port", type=int, default=int(os.getenv("INFOSEC_PORT", "8000")))
@@ -73,6 +74,17 @@ def main():
         except (ValueError, sqlite3.IntegrityError) as exc:
             parser.error(str(exc))
         print("Администратор создан")
+        return
+    if args.command == "reset-password":
+        password = getpass.getpass("Новый пароль (минимум 10 символов): ")
+        confirmation = getpass.getpass("Повторите новый пароль: ")
+        if password != confirmation:
+            parser.error("Пароли не совпадают")
+        try:
+            reset_admin_password(db_path, args.username, password)
+        except ValueError as exc:
+            parser.error(str(exc))
+        print(f"Пароль администратора {args.username} изменен")
         return
     if args.command == "seed-demo":
         seed_demo(db_path)
