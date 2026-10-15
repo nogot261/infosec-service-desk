@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="eyebrow">РЕГИСТРАЦИЯ ОБРАЩЕНИЯ</div><h1>Новая заявка</h1><p class="muted">Укажите проблему и объект обслуживания</p>
+<div class="narrow"><section class="panel padded"><form method="post" action="/tickets" class="stack gap-lg">
+<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<label>Тема заявки<input name="title" required minlength="5" maxlength="160" placeholder="Краткое описание проблемы"></label>
+<div class="form-grid"><label>Категория<select name="category" required>{% for key,name in categories.items() %}<option value="{{ key }}">{{ name }}</option>{% endfor %}</select></label><label>Приоритет<select name="priority" required>{% for key,name in priorities.items() %}<option value="{{ key }}" {{ 'selected' if key=='normal' else '' }}>{{ name }}</option>{% endfor %}</select></label></div>
+<label>Средство защиты (необязательно)<select name="asset_id"><option value="">Не указано</option>{% for asset in assets %}<option value="{{ asset.id }}">{{ asset.inventory_no }} - {{ asset.name }}</option>{% endfor %}</select></label>
+<label>Описание проблемы<textarea name="description" rows="6" required minlength="10" maxlength="4000" placeholder="Что произошло, когда обнаружено, какие действия предпринимались"></textarea></label>
+<div class="form-actions"><button class="primary">Зарегистрировать заявку</button><a class="button secondary" href="/tickets">Отмена</a></div>
+</form></section></div>
+{% endblock %}

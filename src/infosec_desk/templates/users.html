@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="eyebrow">АДМИНИСТРИРОВАНИЕ</div><h1>Пользователи</h1><p class="muted">Учетные записи и права доступа</p>
+<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Логин</th><th>ФИО</th><th>Роль</th><th>Состояние</th></tr></thead><tbody>{% for member in users %}<tr><td><strong>{{ member.username }}</strong></td><td>{{ member.full_name }}</td><td>{{ roles[member.role] }}</td><td>{{ 'Активен' if member.active else 'Отключен' }}</td></tr>{% endfor %}</tbody></table></div></section>
+<section class="panel padded narrow"><h2>Новый пользователь</h2><form action="/users" method="post" class="stack gap-lg"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><div class="form-grid"><label>Логин<input name="username" required minlength="3" maxlength="40"></label><label>ФИО<input name="full_name" required maxlength="120"></label><label>Роль<select name="role">{% for key,label in roles.items() %}<option value="{{ key }}">{{ label }}</option>{% endfor %}</select></label><label>Начальный пароль<input type="password" name="password" minlength="10" required></label></div><button class="primary align-self">Создать</button></form></section>
+{% endblock %}

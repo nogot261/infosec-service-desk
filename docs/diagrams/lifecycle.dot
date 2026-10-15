@@ -1,0 +1,17 @@
+digraph Lifecycle {
+  graph [label="Жизненный цикл заявки", labelloc=t, fontsize=20, fontname="DejaVu Sans", bgcolor=white, rankdir=LR, pad="0.35", nodesep=0.7, ranksep=0.6];
+  node [shape=box,style="rounded",color="#687583",fontname="DejaVu Sans",fontsize=13,margin="0.25,0.18"];
+  edge [color="#687583",arrowsize=0.75];
+  new [label="Новая"];
+  work [label="В работе"];
+  hold [label="Приостановлена"];
+  solved [label="Решена"];
+  closed [label="Закрыта"];
+  new -> work;
+  new -> hold;
+  work -> hold;
+  hold -> work;
+  work -> solved;
+  solved -> work;
+  solved -> closed;
+}

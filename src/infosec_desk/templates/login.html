@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="login-box">
+  <div class="login-brand"><span class="brand-mark">S</span> InfoSec Desk</div>
+  <h1>Вход в систему</h1>
+  <p class="muted">Учет заявок на обслуживание систем защиты информации</p>
+  <form method="post" action="/login" class="stack gap-lg">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Логин<input name="username" required maxlength="40" autocomplete="username" autofocus></label>
+    <label>Пароль<input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="primary wide">Войти</button>
+  </form>
+  <p class="muted small">Доступ предоставляется зарегистрированным пользователям.</p>
+</section>
+{% endblock %}

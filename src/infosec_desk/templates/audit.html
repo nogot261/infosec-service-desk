@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="eyebrow">КОНТРОЛЬ ИСТОРИИ</div><h1>Журнал действий</h1><p class="muted">Последние 100 зарегистрированных событий</p>
+<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Дата и время</th><th>Пользователь</th><th>Событие</th><th>Заявка</th><th>Подробности</th></tr></thead><tbody>{% for item in events %}<tr><td>{{ item.created_at }}</td><td>{{ item.actor_name or 'Система' }}</td><td>{{ item.action }}</td><td>{% if item.ticket_id %}<a href="/tickets/{{ item.ticket_id }}">{{ item.ticket_id | ticket_no }}</a>{% else %}-{% endif %}</td><td>{{ item.details }}</td></tr>{% else %}<tr><td class="empty" colspan="5">Событий пока нет</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

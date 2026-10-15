@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="heading-row"><div><div class="eyebrow">ОБЩАЯ ИНФОРМАЦИЯ</div><h1>Панель управления</h1><p class="muted">Текущее состояние заявок и обращений</p></div><a class="primary button" href="/tickets/new">+ Новая заявка</a></div>
+<div class="stat-grid">
+  <div class="stat-card"><span>Всего заявок</span><strong>{{ stats.total }}</strong><small>За весь период</small></div>
+  <div class="stat-card"><span>Активные заявки</span><strong>{{ stats.open }}</strong><small>Требуют обработки</small></div>
+  <div class="stat-card"><span>Решенные и закрытые</span><strong>{{ stats.resolved }}</strong><small>Завершенные обращения</small></div>
+  <div class="stat-card"><span>Критический приоритет</span><strong>{{ stats.critical }}</strong><small>Не закрыты</small></div>
+</div>
+<section class="panel"><div class="panel-header"><div><h2>Последние заявки</h2><p class="muted">Недавно зарегистрированные обращения</p></div><a href="/tickets" class="text-link">Все заявки →</a></div><div class="table-wrap">{% include '_table.html' %}</div></section>
+<div class="bottom-tip"><strong>Работа с заявками</strong><span>Регистрируйте обращения, отслеживайте исполнителей и историю изменений в карточке заявки.</span></div>
+{% endblock %}

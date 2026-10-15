@@ -1,0 +1,15 @@
+<table class="data-table">
+  <thead><tr><th>Заявка</th><th>Категория</th><th>Приоритет</th><th>Статус</th><th>Исполнитель</th><th>Создана</th></tr></thead>
+  <tbody>
+  {% for t in tickets %}
+  <tr>
+    <td class="ticket-cell"><a href="/tickets/{{ t.id }}"><strong>{{ t.id | ticket_no }}</strong><span>{{ t.title }}</span></a></td>
+    <td>{{ categories[t.category] }}</td>
+    <td><span class="priority priority-{{ t.priority }}">{{ priorities[t.priority] }}</span></td>
+    <td><span class="status status-{{ t.status }}">{{ statuses[t.status] }}</span></td>
+    <td>{{ t.assignee_name or 'Не назначен' }}</td>
+    <td>{{ t.created_at[:16] }}</td>
+  </tr>
+  {% else %}<tr><td colspan="6" class="empty">Заявок пока нет</td></tr>{% endfor %}
+  </tbody>
+</table>

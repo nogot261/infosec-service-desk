@@ -1,0 +1,16 @@
+digraph Database {
+  graph [label="Логическая модель данных", labelloc=t, fontsize=20, fontname="DejaVu Sans", rankdir=LR, nodesep=0.75, ranksep=0.85, pad="0.4", bgcolor=white, splines=polyline];
+  node [shape=record, color="#62717e", fontname="DejaVu Sans", fontsize=12, margin="0.15,0.14"];
+  edge [color="#667788", arrowsize=0.75, fontname="DejaVu Sans", fontsize=11];
+  users [label="{Пользователи|id (PK)\lлогин\lФИО\lроль\lпароль (хеш)\l}"];
+  assets [label="{Средства защиты|id (PK)\lинвентарный номер\lнаименование\lместоположение\l}"];
+  tickets [label="{Заявки|id (PK)\lтема, описание\lкатегория, приоритет\lстатус\lauthor_id (FK)\lassignee_id (FK)\lasset_id (FK)\l}"];
+  comments [label="{Комментарии|id (PK)\lticket_id (FK)\lauthor_id (FK)\lтекст\lдата\l}"];
+  audit [label="{Журнал действий|id (PK)\lticket_id (FK)\lactor_id (FK)\lсобытие\lдата\l}"];
+  {rank=same; users; assets;}
+  {rank=same; comments; audit;}
+  users -> tickets [label="заявитель / исполнитель", taillabel="1", headlabel="N"];
+  assets -> tickets [label="объект", taillabel="1", headlabel="N"];
+  tickets -> comments [label="1:N"];
+  tickets -> audit [label="1:N"];
+}

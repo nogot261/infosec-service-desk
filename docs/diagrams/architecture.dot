@@ -1,0 +1,12 @@
+digraph Architecture {
+  graph [label="Архитектура системы учета заявок", labelloc=t, fontsize=20, fontname="DejaVu Sans", rankdir=TB, nodesep=0.7, ranksep=0.85, bgcolor=white, pad="0.4"];
+  node [shape=box, style="rounded", color="#6f7d8c", fontname="DejaVu Sans", fontsize=13, margin="0.25,0.16"];
+  edge [color="#747f8a", arrowsize=0.8];
+  browser [label="Пользователи\nБраузер Windows / Ubuntu"];
+  web [label="Веб-приложение\nFastAPI + HTML"];
+  business [label="Бизнес-логика\nЗаявки, пользователи, журнал"];
+  db [label="База данных\nSQLite"];
+  browser -> web [label="HTTP"];
+  web -> business;
+  business -> db [label="SQL"];
+}

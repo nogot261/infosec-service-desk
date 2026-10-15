@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} | Служба защиты информации</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="layout">
+  {% if user %}
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">S</span><div><strong>InfoSec Desk</strong><small>Обслуживание систем защиты</small></div></div>
+    <div class="sidebar-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+    <nav class="menu">
+      <a href="/" class="{{ 'active' if request.url.path == '/' else '' }}"><span class="menu-icon">▦</span>Обзор</a>
+      <a href="/tickets" class="{{ 'active' if request.url.path.startswith('/tickets') else '' }}"><span class="menu-icon">☷</span>Заявки</a>
+      <a href="/assets" class="{{ 'active' if request.url.path == '/assets' else '' }}"><span class="menu-icon">▣</span>Средства защиты</a>
+      {% if user.role == 'admin' %}
+      <a href="/users" class="{{ 'active' if request.url.path == '/users' else '' }}"><span class="menu-icon">♙</span>Пользователи</a>
+      <a href="/audit" class="{{ 'active' if request.url.path == '/audit' else '' }}"><span class="menu-icon">≡</span>Журнал действий</a>
+      {% endif %}
+    </nav>
+    <div class="side-bottom"><div class="avatar">{{ user.full_name[0] }}</div><div class="profile"><strong>{{ user.full_name }}</strong><small>{{ roles[user.role] }}</small></div></div>
+    <form action="/logout" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="logout" type="submit">Выйти из системы</button></form>
+  </aside>
+  {% endif %}
+  <main class="content {{ 'login-layout' if not user else '' }}">
+    {% if user %}
+    <header class="topbar"><span>Система учета заявок на обслуживание систем защиты информации</span><span class="live">Локальная система</span></header>
+    {% endif %}
+    <div class="page">
+      {% if message %}<div class="notice success">{{ message }}</div>{% endif %}
+      {% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+</body>
+</html>
