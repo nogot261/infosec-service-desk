@@ -1,0 +1,36 @@
+name: Source snapshot
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Create source package
+        run: |
+          python - <<'PYCODE'
+          import pathlib
+          import zipfile
+          root = pathlib.Path.cwd()
+          with zipfile.ZipFile('infosec_source.zip', 'w', zipfile.ZIP_DEFLATED) as output:
+              for file in sorted(root.rglob('*')):
+                  if not file.is_file():
+                      continue
+                  rel = file.relative_to(root)
+                  if '.git' in rel.parts or '.venv' in rel.parts or 'instance' in rel.parts:
+                      continue
+                  if rel.name == 'infosec_source.zip':
+                      continue
+                  output.write(file, pathlib.Path('infosec-service-desk') / rel)
+          PYCODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: infosec-source
+          path: infosec_source.zip
+          retention-days: 7
