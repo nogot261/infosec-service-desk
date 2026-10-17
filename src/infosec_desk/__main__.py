@@ -103,7 +103,8 @@ def main():
                 print(f"Резервная копия: {backup_database(db_path, args.file)}")
             else:
                 report = inspect_update_manifest(args.file)
-                status = "есть новая версия" if report["needs_update"] else "обновление не требуется"
+                status = ("есть новая версия" if report["needs_update"]
+                          else "обновление не требуется")
                 print(f"Текущая версия: {report['installed']}; "
                       f"доступная версия: {report['available']}; {status}")
         except (OSError, ValueError) as exc:
