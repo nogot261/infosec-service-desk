@@ -79,6 +79,22 @@ python run.py serve --db instance/demo.sqlite3
 | `python run.py reset-password` | Смена пароля существующего администратора |
 | `python run.py seed-demo --db instance/demo.sqlite3` | Демонстрационная база и записи |
 
+## Файловый обмен и сопровождение
+
+Поддерживается проверяемый файловый обмен справочником средств защиты:
+
+```bash
+python run.py export-assets --file assets.json
+python run.py import-assets --file assets.json
+python run.py backup-db --file backup.sqlite3
+python run.py check-update --file release.json
+```
+
+Формат обмена и ограничения описаны в `docs/file_exchange.md`.
+Реальной интеграции с корпоративными ИС и автоматической установки обновлений нет.
+Сведения об академическом периоде практики и дате программной реализации
+отдельно приведены в `docs/implementation_scope.md`.
+
 ## Проверка проекта
 
 ```bash

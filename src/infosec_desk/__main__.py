@@ -8,6 +8,8 @@ import sqlite3
 from pathlib import Path
 
 from .db import connect, initialize
+from .exchange import export_assets, import_assets
+from .maintenance import backup_database, inspect_update_manifest
 from .service import add_asset, create_ticket, create_user, reset_admin_password
 
 
@@ -51,9 +53,11 @@ def main():
     )
     parser.add_argument(
         "command", nargs="?",
-        choices=["serve", "init-db", "create-admin", "reset-password", "seed-demo"],
+        choices=["serve", "init-db", "create-admin", "reset-password", "seed-demo",
+                 "import-assets", "export-assets", "backup-db", "check-update"],
         default="serve",
     )
+    parser.add_argument("--file", help="Файл обмена, резервной копии или обновления")
     parser.add_argument("--username", default="admin")
     parser.add_argument("--db", default=os.getenv("INFOSEC_DB_PATH", "instance/infosec.sqlite3"))
     parser.add_argument("--host", default=os.getenv("INFOSEC_HOST", "127.0.0.1"))
@@ -85,6 +89,25 @@ def main():
         except ValueError as exc:
             parser.error(str(exc))
         print(f"Пароль администратора {args.username} изменен")
+        return
+    if args.command in {"import-assets", "export-assets", "backup-db", "check-update"}:
+        if not args.file:
+            parser.error("Укажите путь к файлу аргументом --file")
+        try:
+            if args.command == "import-assets":
+                result = import_assets(db_path, args.file)
+                print(f"Импортировано: {result['added']}; пропущено: {result['skipped']}")
+            elif args.command == "export-assets":
+                print(f"Экспортировано объектов: {export_assets(db_path, args.file)}")
+            elif args.command == "backup-db":
+                print(f"Резервная копия: {backup_database(db_path, args.file)}")
+            else:
+                report = inspect_update_manifest(args.file)
+                status = "есть новая версия" if report["needs_update"] else "обновление не требуется"
+                print(f"Текущая версия: {report['installed']}; "
+                      f"доступная версия: {report['available']}; {status}")
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
         return
     if args.command == "seed-demo":
         seed_demo(db_path)
