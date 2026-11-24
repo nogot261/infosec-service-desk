@@ -232,4 +232,71 @@ textarea { resize: vertical; line-height: 1.6; min-height: 105px; }
 .comment-form { margin-top: 25px; }
 .error-actions { margin-top: 24px; }
 
-.site-footer{margin-top:40px;padding:18px 0;border-top:1px solid #c6c6c6;font-size:13px;color:#555}.site-footer a{color:inherit} .topbar-path a{color:inherit;text-decoration:underline} .sidebar{overflow-y:auto;max-height:100vh} .panel ul{line-height:1.7} .panel table{width:100%;border-collapse:collapse} .panel th,.panel td{border-bottom:1px solid #ddd;text-align:left;padding:8px;vertical-align:top;overflow-wrap:anywhere} .menu a{padding:8px 10px} @media(max-width:800px){.sidebar{position:static;width:auto;max-height:none;flex:none}.layout{display:block}.content{min-width:0}.page{padding:16px}.sidebar .menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:2px}.topbar{flex-wrap:wrap}.panel{overflow-x:auto}}
+/* Общие элементы для открытых страниц и формы авторизации. */
+.topbar-account { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.topbar-login {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 34px; padding: 7px 16px;
+  border: 1px solid var(--accent); border-radius: 7px;
+  color: var(--accent); font-size: 12px; font-weight: 700;
+  background: #fff;
+}
+.topbar-login:hover, .topbar-login[aria-current="page"] { background: #eef4fa; }
+.topbar-path a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.sidebar { overflow-y: auto; max-height: 100vh; }
+.menu a { padding: 8px 10px; }
+
+/* Форма входа: компактная карточка по центру рабочей области. */
+.login-box {
+  width: min(100%, 445px); margin: clamp(12px, 5vh, 66px) auto 40px;
+  padding: 30px 32px;
+}
+.login-box .login-brand { margin-bottom: 24px; }
+.login-box h1 { font-size: 24px; margin-bottom: 8px; }
+.login-box .page-description { margin: 0 0 22px; }
+.login-box .stack { gap: 16px; }
+.login-box .login-footer { margin-top: 20px; }
+
+/* Содержимое информационных страниц не прижимается к границам блока. */
+.public-content { margin-top: 0; padding: 28px 34px 30px; }
+.public-content .public-intro { margin: 0 0 25px; color: #39485b; font-size: 14px; line-height: 1.7; }
+.public-content h2 { margin: 0 0 12px; }
+.public-content .public-points { padding-left: 24px; margin: 0 0 25px; line-height: 1.7; }
+.public-content .public-points li { padding-left: 4px; margin: 0 0 9px; }
+.public-content .public-points li:last-child { margin-bottom: 0; }
+.public-actions { display: flex; flex-wrap: wrap; gap: 12px 25px; align-items: center; padding-top: 15px; border-top: 1px solid var(--border); }
+.public-actions a { font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.public-actions a:hover { color: var(--accent-hover); }
+
+/* ФИО автора остаётся в подвале, ссылка на контакты видна постоянно. */
+.site-footer {
+  margin-top: 32px; padding: 18px 0 0;
+  border-top: 1px solid var(--border);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 9px 24px;
+  color: var(--muted); font-size: 12px; line-height: 1.5;
+}
+.site-footer a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font-weight: 650; }
+.site-footer a:hover { color: var(--accent-hover); }
+.panel ul { line-height: 1.7; }
+.panel table { width: 100%; border-collapse: collapse; }
+.panel th, .panel td { border-bottom: 1px solid #ddd; text-align: left; padding: 8px; vertical-align: top; overflow-wrap: anywhere; }
+
+@media (max-width: 800px) {
+  .sidebar { position: static; width: auto; max-height: none; flex: none; }
+  .layout { display: block; }
+  .content { min-width: 0; }
+  .page { padding: 22px 18px 48px; }
+  .sidebar .menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 2px; }
+  .topbar { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 18px; min-height: 56px; }
+  .topbar-path { min-width: 0; flex-wrap: wrap; }
+  .public-content { padding: 22px 20px; }
+  .panel { overflow-x: auto; }
+}
+@media (max-width: 540px) {
+  .login-box { width: 100%; padding: 25px 22px; margin: 14px auto 28px; }
+  .public-content { padding: 20px 18px; }
+  .public-content .public-points { padding-left: 20px; }
+  .topbar-user { display: none; }
+  .topbar-login { padding: 7px 13px; }
+  .site-footer { gap: 8px; }
+}

@@ -1,8 +1,26 @@
-{% extends 'base.html' %}{% block content %}
-<div class="page-head"><div><p class="section-label">Информация для посетителей</p><h1>{{ heading }}</h1></div></div>
-<section class="panel"><p>{{ body }}</p>
-<h2>Что важно знать</h2>
-<ul>{% for point in details %}<li>{{ point }}</li>{% endfor %}</ul>
-{% if items %}<h2>Каталог услуг</h2><ul>{% for item in items %}<li><strong>{{ item.name }}</strong> - {{ item.description }}</li>{% endfor %}</ul>{% endif %}
-<p><a class="text-link" href="/login">Перейти к личному кабинету</a> | <a class="text-link" href="/feedback">Написать сообщение</a></p></section>
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="section-label">Информация для посетителей</p>
+    <h1>{{ heading }}</h1>
+  </div>
+</div>
+<section class="panel public-content" aria-label="{{ heading }}">
+  <p class="public-intro">{{ body }}</p>
+  <h2>Что важно знать</h2>
+  <ul class="public-points">
+    {% for point in details %}<li>{{ point }}</li>{% endfor %}
+  </ul>
+  {% if items %}
+  <h2>Каталог услуг</h2>
+  <ul class="public-points">
+    {% for item in items %}<li><strong>{{ item.name }}</strong> - {{ item.description }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  <div class="public-actions">
+    <a class="text-link" href="/login">Перейти к личному кабинету</a>
+    <a class="text-link" href="/feedback">Написать сообщение</a>
+  </div>
+</section>
 {% endblock %}

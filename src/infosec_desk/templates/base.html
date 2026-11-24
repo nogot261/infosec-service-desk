@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ffffff">
   <title>{{ title }} | InfoSec Desk</title>
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/static/style.css?v=2">
+  <link rel="stylesheet" href="/static/style.css?v=3">
 </head>
 <body>
 <a class="skip-link" href="#main-content">К основному содержанию</a>
@@ -81,12 +81,27 @@
     {% endif %}
   </aside>
   <main class="content" id="main-content">
-    <header class="topbar"><nav class="topbar-path" aria-label="Хлебные крошки"><a href="/public/overview">InfoSec Desk</a><span class="topbar-divider">/</span>{% if user and request.path.startswith('/tickets/') %}<a href="/tickets">Заявки</a><span class="topbar-divider">/</span>{% endif %}<strong aria-current="page">{{ title }}</strong></nav><span class="topbar-user">{{ user.username if user else 'Гость' }}</span></header>
+    <header class="topbar">
+      <nav class="topbar-path" aria-label="Хлебные крошки">
+        <a href="/public/overview">InfoSec Desk</a><span class="topbar-divider">/</span>
+        {% if user and request.path.startswith('/tickets/') %}
+        <a href="/tickets">Заявки</a><span class="topbar-divider">/</span>
+        {% endif %}
+        <strong aria-current="page">{{ title }}</strong>
+      </nav>
+      <div class="topbar-account">
+        <span class="topbar-user">{{ user.username if user else 'Гость' }}</span>
+        {% if not user %}<a class="topbar-login" href="/login" {% if request.path == '/login' %}aria-current="page"{% endif %}>Войти</a>{% endif %}
+      </div>
+    </header>
     <div class="page">
       {% if message %}<div class="notice success" role="status">{{ message }}</div>{% endif %}
       {% if error %}<div class="notice error" role="alert">{{ error }}</div>{% endif %}
       {% block content %}{% endblock %}
-      <footer class="site-footer">Коробейникова Мария Вячеславовна. Преддипломная практика. <a href="/public/contacts">Контакты</a></footer>
+      <footer class="site-footer">
+        <span>Разработчик: Коробейникова Мария Вячеславовна</span>
+        <a href="/public/contacts">Контакты службы</a>
+      </footer>
     </div>
   </main>
 </div>
