@@ -6,6 +6,11 @@ import sys
 import tempfile
 from pathlib import Path
 
+# В терминалах Windows по умолчанию иногда используется cp1252.
+# Вывод результатов должен оставаться читаемым и не прерывать проверки.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
