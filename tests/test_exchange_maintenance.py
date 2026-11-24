@@ -59,11 +59,11 @@ def test_backup_and_no_overwrite(db_path, tmp_path):
 
 def test_inspect_update_manifest(tmp_path):
     f = tmp_path / "release.json"
-    f.write_text(json.dumps({"format": "infosec-release-v1", "version": "1.1.0",
+    f.write_text(json.dumps({"format": "infosec-release-v1", "version": "2.1.0",
                             "sha256": "f" * 64}), encoding="utf-8")
     result = inspect_update_manifest(f)
     assert result["needs_update"]
-    assert result["installed"] == "1.0.0"
+    assert result["installed"] == "2.0.0"
     f.write_text('{"format": "infosec-release-v1", "version": "bad", "sha256": "ff"}',
                  encoding="utf-8")
     with pytest.raises(ValueError):

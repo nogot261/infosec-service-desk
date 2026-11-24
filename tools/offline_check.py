@@ -1,5 +1,7 @@
 """Предметная проверка без запуска веб-сервера и без сторонних пакетов."""
 import csv
+import gc
+from contextlib import closing
 import sys
 import tempfile
 from pathlib import Path
@@ -16,7 +18,7 @@ def main():
     completed = []
     demo = ROOT / "instance" / "demo.sqlite3"
     assert demo.is_file(), "Не найдена учебная БД"
-    with connect(demo) as db:
+    with closing(connect(demo)) as db:
         tables = {r[0] for r in db.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name!='sqlite_sequence'"
         )}
@@ -68,7 +70,7 @@ def main():
         completed.append("Проверка допустимых статусов и даты закрытия")
         service.create_feedback(db_file, 'Посетитель', 'visitor@example.org',
             'Вопрос', 'Нужно уточнить порядок подачи обращения')
-        with connect(db_file) as db:
+        with closing(connect(db_file)) as db:
             assert db.execute('SELECT count(*) FROM feedback_messages').fetchone()[0] == 1
         completed.append("Форма обратной связи сохраняет запись через предметную функцию")
         service.add_asset(db_file, 'AV-001', 'Антивирус', 'Серверная', 'Антивирусная защита')
@@ -77,6 +79,9 @@ def main():
         result=import_assets(db_file, payload)
         assert result['added'] == 0 and result['skipped'] == 1
         completed.append("JSON справочника экспортируется и импортируется без дублей")
+        # SQLite-соединения в предметных функциях могут закрыться после GC.
+        # На Windows открытый файл базы нельзя удалить из временной папки.
+        gc.collect()
     for idx, check in enumerate(completed, 1):
         print(f'{idx:02d}. OK - {check}')
     print(f'ИТОГО: {len(completed)} предметных проверок пройдено')
