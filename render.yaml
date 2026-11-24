@@ -2,6 +2,7 @@ services:
   - type: web
     name: infosec-desk-practice
     runtime: python
+    branch: flask-render-20261124
     plan: free
     buildCommand: python -m pip install -r requirements-deploy.txt
     startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 60
