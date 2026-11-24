@@ -1,0 +1,3 @@
+digraph "AS IS" { graph [rankdir=LR, fontname="DejaVu Sans", fontsize=12, label="AS IS. Регистрация и обработка заявки до автоматизации", labelloc=t, bgcolor=white, nodesep=.7, ranksep=.7]; node[shape=box,style=rounded,color=black,fontname="DejaVu Sans",fontsize=10]; edge[fontname="DejaVu Sans",fontsize=9,color=black];
+start[label="A1. Получение обращения\nпо почте или телефону"]; record[label="A2. Ручная запись\nсведений"]; assign[label="A3. Передача обращения\nисполнителю"]; work[label="A4. Уточнение и\nустранение проблемы"]; close[label="A5. Закрытие обращения\nв переписке"]; start -> record -> assign -> work -> close;
+}

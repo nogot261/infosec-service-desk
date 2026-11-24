@@ -4,7 +4,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-PACKAGE_VERSION = "1.0.0"
+PACKAGE_VERSION = "2.0.0"
 
 
 def backup_database(db_path, target_path):

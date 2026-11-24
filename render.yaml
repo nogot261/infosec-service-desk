@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: infosec-desk-practice
+    runtime: python
+    plan: free
+    buildCommand: python -m pip install -r requirements-deploy.txt
+    startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 60
+    healthCheckPath: /health
+    envVars:
+      - key: INFOSEC_SECRET_KEY
+        generateValue: true
+      - key: INFOSEC_DEMO_PASSWORD
+        generateValue: true
+      - key: INFOSEC_SECURE_COOKIES
+        value: '1'

@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
-REQUIRED_MODULES = ("fastapi", "uvicorn", "jinja2", "multipart", "itsdangerous")
+REQUIRED_MODULES = ("flask", "jinja2", "openpyxl")
 
 
 def has_dependencies() -> bool:
@@ -46,7 +46,7 @@ def prepare_runtime() -> None:
     interpreter = directory / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
     if directory.is_dir():
         probe = subprocess.run(
-            [str(interpreter), "-c", "import fastapi,uvicorn,jinja2,multipart,itsdangerous"],
+            [str(interpreter), "-c", "import flask,jinja2,openpyxl"],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False,
         )
         if probe.returncode == 0:

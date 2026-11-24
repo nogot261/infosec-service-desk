@@ -231,3 +231,5 @@ textarea { resize: vertical; line-height: 1.6; min-height: 105px; }
 }
 .comment-form { margin-top: 25px; }
 .error-actions { margin-top: 24px; }
+
+.site-footer{margin-top:40px;padding:18px 0;border-top:1px solid #c6c6c6;font-size:13px;color:#555}.site-footer a{color:inherit} .topbar-path a{color:inherit;text-decoration:underline} .sidebar{overflow-y:auto;max-height:100vh} .panel ul{line-height:1.7} .panel table{width:100%;border-collapse:collapse} .panel th,.panel td{border-bottom:1px solid #ddd;text-align:left;padding:8px;vertical-align:top;overflow-wrap:anywhere} .menu a{padding:8px 10px} @media(max-width:800px){.sidebar{position:static;width:auto;max-height:none;flex:none}.layout{display:block}.content{min-width:0}.page{padding:16px}.sidebar .menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:2px}.topbar{flex-wrap:wrap}.panel{overflow-x:auto}}

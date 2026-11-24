@@ -3,11 +3,22 @@
 <div class="page-head"><div><p class="section-label">Справочники</p><h1>Средства защиты</h1><p class="page-description">Учет объектов, по которым поступают обращения.</p></div></div>
 <section class="panel" aria-label="Список средств защиты">
   <div class="table-wrap"><table class="data-table">
-    <thead><tr><th scope="col">Инвентарный номер</th><th scope="col">Наименование</th><th scope="col">Расположение</th><th scope="col">Класс защиты</th></tr></thead>
+    <thead><tr><th scope="col">Инвентарный номер</th><th scope="col">Наименование</th><th scope="col">Расположение</th><th scope="col">Класс защиты</th>{% if user.role == 'admin' %}<th scope="col">Действия</th>{% endif %}</tr></thead>
     <tbody>{% for asset in assets %}
-      <tr><td><span class="table-strong">{{ asset.inventory_no }}</span></td><td>{{ asset.name }}</td><td>{{ asset.location }}</td><td>{{ asset.protection_class }}</td></tr>
+      <tr><td><span class="table-strong">{{ asset.inventory_no }}</span></td><td>{{ asset.name }}</td><td>{{ asset.location }}</td><td>{{ asset.protection_class }}</td>{% if user.role == 'admin' %}<td>
+      <details><summary>Изменить</summary><form method="post" action="/assets/{{ asset.id }}/edit" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label>Инвентарный номер<input name="inventory_no" value="{{ asset.inventory_no }}" required></label>
+      <label>Наименование<input name="name" value="{{ asset.name }}" required></label>
+      <label>Расположение<input name="location" value="{{ asset.location }}" required></label>
+      <label>Класс защиты<input name="protection_class" value="{{ asset.protection_class }}" required></label>
+      <label>Описание<textarea name="description">{{ asset.description }}</textarea></label>
+      <button type="submit">Сохранить</button></form></details>
+      <form method="post" action="/assets/{{ asset.id }}/delete" onsubmit="return confirm('Удалить СЗИ из справочника? Заявки сохранятся.');">
+       <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button type="submit">Удалить</button></form>
+      </td>{% endif %}</tr>
     {% else %}
-      <tr><td colspan="4" class="empty-cell"><div class="empty-state"><strong>Средств защиты пока нет</strong><p>Добавьте объект, чтобы связывать его с заявками на обслуживание.</p></div></td></tr>
+      <tr><td colspan="{{ 5 if user.role == 'admin' else 4 }}" class="empty-cell"><div class="empty-state"><strong>Средств защиты пока нет</strong><p>Добавьте объект, чтобы связывать его с заявками на обслуживание.</p></div></td></tr>
     {% endfor %}</tbody>
   </table></div>
 </section>

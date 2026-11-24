@@ -11,37 +11,63 @@
 <body>
 <a class="skip-link" href="#main-content">К основному содержанию</a>
 <div class="layout">
-  {% if user %}
   <aside class="sidebar" aria-label="Навигация">
-    <a class="brand" href="/" aria-label="InfoSec Desk, на главную">
+    <a class="brand" href="/public/overview" aria-label="InfoSec Desk, на главную">
       <span class="brand-mark" aria-hidden="true">IS</span>
       <span><strong>InfoSec Desk</strong><small>Служба защиты информации</small></span>
     </a>
     <div class="sidebar-label">Разделы</div>
     <nav class="menu" aria-label="Главное меню">
-      <a href="/" class="{{ 'active' if request.url.path == '/' else '' }}" {% if request.url.path == '/' %}aria-current="page"{% endif %}>
+      {% if user %}
+      <a href="/" class="{{ 'active' if request.path == '/' else '' }}" {% if request.path == '/' %}aria-current="page"{% endif %}>
         <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.4"/><rect x="13" y="3" width="8" height="8" rx="1.4"/><rect x="3" y="13" width="8" height="8" rx="1.4"/><rect x="13" y="13" width="8" height="8" rx="1.4"/></svg>
         Обзор
       </a>
-      <a href="/tickets" class="{{ 'active' if request.url.path.startswith('/tickets') else '' }}" {% if request.url.path.startswith('/tickets') %}aria-current="page"{% endif %}>
+      <a href="/tickets" class="{{ 'active' if request.path.startswith('/tickets') else '' }}" {% if request.path.startswith('/tickets') %}aria-current="page"{% endif %}>
         <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h14M7 12h14M7 19h14"/><path d="M3 5h.01M3 12h.01M3 19h.01"/></svg>
         Заявки
       </a>
-      <a href="/assets" class="{{ 'active' if request.url.path == '/assets' else '' }}" {% if request.url.path == '/assets' %}aria-current="page"{% endif %}>
+      <a href="/assets" class="{{ 'active' if request.path == '/assets' else '' }}" {% if request.path == '/assets' %}aria-current="page"{% endif %}>
         <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>
         Средства защиты
       </a>
+      <a href="/tickets/new">Новая заявка</a>
+      <a href="/profile">Личный кабинет</a>
+      <a href="/my-activity">Моя активность</a>
+      <a href="/notifications">Уведомления</a>
+      <a href="/my-help">Помощь</a>
       {% if user.role == 'admin' %}
-      <a href="/users" class="{{ 'active' if request.url.path == '/users' else '' }}" {% if request.url.path == '/users' %}aria-current="page"{% endif %}>
+      <a href="/users" class="{{ 'active' if request.path == '/users' else '' }}" {% if request.path == '/users' %}aria-current="page"{% endif %}>
         <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 8h4M19 6v4"/></svg>
         Пользователи
       </a>
-      <a href="/audit" class="{{ 'active' if request.url.path == '/audit' else '' }}" {% if request.url.path == '/audit' %}aria-current="page"{% endif %}>
+      <a href="/audit" class="{{ 'active' if request.path == '/audit' else '' }}" {% if request.path == '/audit' %}aria-current="page"{% endif %}>
         <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h14M7 10h14M7 16h10M3 4h.01M3 10h.01M3 16h.01"/></svg>
         Журнал действий
       </a>
+      <a href="/admin/services">Каталог услуг</a>
+      <a href="/admin/feedback">Обратная связь</a>
+      <a href="/admin/settings">Настройки</a>
+      <a href="/admin/analytics">Аналитика</a>
+      <a href="/admin/data-exchange">Обмен JSON</a>
       {% endif %}
+      {% endif %}
+      <a href="/public/overview">О службе</a>
+      <a href="/public/services">Услуги</a>
+      <a href="/public/submit">Как подать заявку</a>
+      <a href="/public/categories">Категории</a>
+      <a href="/public/priorities">Приоритеты</a>
+      <a href="/public/status">Статусы</a>
+      <a href="/public/tracking">Отслеживание</a>
+      <a href="/public/faq">Вопросы</a>
+      <a href="/public/security">Безопасность</a>
+      <a href="/public/help">Помощь без входа</a>
+      <a href="/public/contacts">Контакты</a>
+      <a href="/public/rules">Правила</a>
+      <a href="/feedback">Обратная связь</a>
+      {% if not user %}<a href="/login">Вход</a>{% endif %}
     </nav>
+    {% if user %}
     <div class="account-panel">
       <div class="account-row">
         <span class="avatar" aria-hidden="true">{{ user.full_name[:1] | upper }}</span>
@@ -52,16 +78,15 @@
         <button class="logout" type="submit">Выйти</button>
       </form>
     </div>
-  </aside>
-  {% endif %}
-  <main class="content {{ 'login-layout' if not user else '' }}" id="main-content">
-    {% if user %}
-    <header class="topbar"><div class="topbar-path"><span>InfoSec Desk</span><span class="topbar-divider">/</span><strong>{{ title }}</strong></div><span class="topbar-user">{{ user.username }}</span></header>
     {% endif %}
+  </aside>
+  <main class="content" id="main-content">
+    <header class="topbar"><nav class="topbar-path" aria-label="Хлебные крошки"><a href="/public/overview">InfoSec Desk</a><span class="topbar-divider">/</span>{% if user and request.path.startswith('/tickets/') %}<a href="/tickets">Заявки</a><span class="topbar-divider">/</span>{% endif %}<strong aria-current="page">{{ title }}</strong></nav><span class="topbar-user">{{ user.username if user else 'Гость' }}</span></header>
     <div class="page">
       {% if message %}<div class="notice success" role="status">{{ message }}</div>{% endif %}
       {% if error %}<div class="notice error" role="alert">{{ error }}</div>{% endif %}
       {% block content %}{% endblock %}
+      <footer class="site-footer">Коробейникова Мария Вячеславовна. Преддипломная практика. <a href="/public/contacts">Контакты</a></footer>
     </div>
   </main>
 </div>

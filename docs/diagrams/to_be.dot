@@ -1,0 +1,3 @@
+digraph "TO BE" {graph [rankdir=LR,fontname="DejaVu Sans",fontsize=12,label="TO BE. Регистрация и обработка заявки после автоматизации",labelloc=t,bgcolor=white,nodesep=.7,ranksep=.7]; node[shape=box,style=rounded,color=black,fontname="DejaVu Sans",fontsize=10]; edge[fontname="DejaVu Sans",fontsize=9,color=black];
+start[label="A1. Заполнение\nэлектронной формы"]; record[label="A2. Сохранение заявки\nс номером и автором"]; assign[label="A3. Назначение\nспециалиста"]; work[label="A4. Изменение статуса\nи комментарии"]; close[label="A5. Решение и закрытие\nс записью истории"]; start->record->assign->work->close;
+}

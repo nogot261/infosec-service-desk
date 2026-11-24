@@ -1,7 +1,6 @@
 import re
 
 import pytest
-from fastapi.testclient import TestClient
 
 from infosec_desk.db import initialize
 from infosec_desk.service import add_asset, create_user
@@ -22,13 +21,13 @@ def db_path(tmp_path):
 
 @pytest.fixture
 def client(db_path):
-    with TestClient(create_app(db_path, secret_key="test-secret-not-for-production")) as client:
+    with create_app(db_path, secret_key="test-secret-not-for-production").test_client() as client:
         yield client
 
 
 def csrf(client, path="/login"):
     page = client.get(path)
-    result = re.search(r'name="csrf_token"\s+value="([^"]+)"', page.text)
+    result = re.search(r'name="csrf_token"\s+value="([^"]+)"', page.get_data(as_text=True))
     assert result is not None
     return result.group(1)
 

@@ -10,7 +10,7 @@ from pathlib import Path
 from .db import connect, initialize
 from .exchange import export_assets, import_assets
 from .maintenance import backup_database, inspect_update_manifest
-from .service import add_asset, create_ticket, create_user, reset_admin_password
+from .service import add_asset, create_ticket, create_user, reset_admin_password, add_service, update_ticket, list_tickets
 
 
 def seed_demo(db_path):
@@ -38,6 +38,47 @@ def seed_demo(db_path):
         "Требуется проверить получение обновлений на рабочей станции отдела.",
         "antivirus", "normal", 2,
     )
+    for code, name, description, category in (
+        ("ACCESS", "Доступ к ресурсу", "Ошибки входа и управления правами", "access"),
+        ("AV", "Антивирусная защита", "Настройка и обновление защиты", "antivirus"),
+        ("NETWORK", "Сетевая защита", "Проверка доступа и межсетевого экрана", "network"),
+        ("CRYPTO", "Криптографическая защита", "Сертификаты и шифрование", "crypto"),
+        ("BACKUP", "Резервное копирование", "Копии и восстановление данных", "backup"),
+    ):
+        add_service(db_path, code, name, description, category)
+    # Дополнительные учебные заявки нужны для проверки полного экспорта.
+    # Реальных персональных данных в учебном комплекте нет.
+    with connect(db_path) as db:
+        db.execute("BEGIN")
+        for i in range(3, 502):
+            status = "closed" if i % 2 else "new"
+            db.execute(
+                """INSERT INTO tickets(
+                       title, description, category, priority, status, author_id,
+                       assignee_id, resolved_at, closed_at
+                   ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    f"Учебное обращение {i}",
+                    f"Тестовая заявка номер {i} для проверки фильтрации и экспорта.",
+                    "access" if i % 2 else "antivirus", "normal", status,
+                    requester["id"], 2 if status == "closed" else None,
+                    "2026-11-23 11:00:00" if status == "closed" else None,
+                    "2026-11-23 12:00:00" if status == "closed" else None,
+                ),
+            )
+            db.execute(
+                "INSERT INTO ticket_status_history(ticket_id,actor_id,old_status,new_status) VALUES(?,?,?,?)",
+                (i, requester["id"], None, "new"),
+            )
+            if status == "closed":
+                for old_status, new_status in (("new", "in_progress"),
+                                                ("in_progress", "resolved"),
+                                                ("resolved", "closed")):
+                    db.execute(
+                        "INSERT INTO ticket_status_history(ticket_id,actor_id,old_status,new_status) VALUES(?,?,?,?)",
+                        (i, 2, old_status, new_status),
+                    )
+        db.commit()
     print("Демонстрационные пользователи: admin, operator, employee")
     print("Пароль для всех: DemoPass123! (только для локального знакомства)")
 
@@ -113,8 +154,6 @@ def main():
     if args.command == "seed-demo":
         seed_demo(db_path)
         return
-    import uvicorn
-
     from .web import create_app
 
     with connect(db_path) as db:
@@ -130,7 +169,7 @@ def main():
         parser.error("Для сетевого запуска задайте INFOSEC_SECRET_KEY и настройте HTTPS")
     app = create_app(db_path)
     print(f"Адрес: http://{args.host}:{args.port}")
-    uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    app.run(host=args.host, port=args.port, debug=False, use_reloader=False)
 
 
 if __name__ == "__main__":

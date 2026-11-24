@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Моя активность</h1>
+<section class="panel">
+  <p>Доступные обращения по вашей роли.</p>
+  <ul>
+    {% for item in items %}
+      <li><a href="/tickets/{{ item.id }}">{{ item.id | ticket_no }}: {{ item.title }}</a> - {{ statuses[item.status] }}</li>
+    {% else %}<li>Доступных заявок пока нет.</li>{% endfor %}
+  </ul>
+</section>
+{% endblock %}

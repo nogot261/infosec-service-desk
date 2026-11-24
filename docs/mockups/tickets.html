@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Заявки | InfoSec Desk</title>
+  <link rel="icon" href="../../src/infosec_desk/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../src/infosec_desk/static/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">К основному содержанию</a>
+<div class="layout">
+  <aside class="sidebar" aria-label="Навигация">
+    <a class="brand" href="/public/overview" aria-label="InfoSec Desk, на главную">
+      <span class="brand-mark" aria-hidden="true">IS</span>
+      <span><strong>InfoSec Desk</strong><small>Служба защиты информации</small></span>
+    </a>
+    <div class="sidebar-label">Разделы</div>
+    <nav class="menu" aria-label="Главное меню">
+      
+      <a href="/" class="" >
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.4"/><rect x="13" y="3" width="8" height="8" rx="1.4"/><rect x="3" y="13" width="8" height="8" rx="1.4"/><rect x="13" y="13" width="8" height="8" rx="1.4"/></svg>
+        Обзор
+      </a>
+      <a href="/tickets" class="active" aria-current="page">
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h14M7 12h14M7 19h14"/><path d="M3 5h.01M3 12h.01M3 19h.01"/></svg>
+        Заявки
+      </a>
+      <a href="/assets" class="" >
+        <svg class="menu-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>
+        Средства защиты
+      </a>
+      <a href="/tickets/new">Новая заявка</a>
+      <a href="/profile">Личный кабинет</a>
+      <a href="/my-activity">Моя активность</a>
+      <a href="/notifications">Уведомления</a>
+      <a href="/my-help">Помощь</a>
+      
+      
+      <a href="/public/overview">О службе</a>
+      <a href="/public/services">Услуги</a>
+      <a href="/public/submit">Как подать заявку</a>
+      <a href="/public/categories">Категории</a>
+      <a href="/public/priorities">Приоритеты</a>
+      <a href="/public/status">Статусы</a>
+      <a href="/public/tracking">Отслеживание</a>
+      <a href="/public/faq">Вопросы</a>
+      <a href="/public/security">Безопасность</a>
+      <a href="/public/help">Помощь без входа</a>
+      <a href="/public/contacts">Контакты</a>
+      <a href="/public/rules">Правила</a>
+      <a href="/feedback">Обратная связь</a>
+      
+    </nav>
+    
+    <div class="account-panel">
+      <div class="account-row">
+        <span class="avatar" aria-hidden="true">С</span>
+        <div class="profile"><strong title="Сотрудник организации">Сотрудник организации</strong><small>Заявитель</small></div>
+      </div>
+      <form method="post" action="/logout">
+        <input type="hidden" name="csrf_token" value="DEMO_CSRF_VALUE">
+        <button class="logout" type="submit">Выйти</button>
+      </form>
+    </div>
+    
+  </aside>
+  <main class="content" id="main-content">
+    <header class="topbar"><nav class="topbar-path" aria-label="Хлебные крошки"><a href="/public/overview">InfoSec Desk</a><span class="topbar-divider">/</span><strong aria-current="page">Заявки</strong></nav><span class="topbar-user">employee</span></header>
+    <div class="page">
+      
+      
+      
+<div class="page-head">
+  <div><p class="section-label">Учет обращений</p><h1>Заявки</h1><p class="page-description">Реестр обращений, поиск и контроль исполнения.</p></div>
+  <a href="/tickets/new" class="button primary">Создать заявку</a>
+</div>
+<section class="panel" aria-label="Реестр заявок">
+  <form class="filters" method="get" action="/tickets" role="search">
+    <label class="grow" for="ticket-search">Поиск по заявкам
+      <input id="ticket-search" name="q" type="search" placeholder="Тема, номер или описание" value="">
+    </label>
+    <label for="ticket-status">Статус
+      <select id="ticket-status" name="status"><option value="">Все статусы</option><option value="new" >Новая</option><option value="in_progress" >В работе</option><option value="on_hold" >Приостановлена</option><option value="resolved" >Решена</option><option value="closed" >Закрыта</option></select>
+    </label>
+    <div class="filter-actions"><button class="secondary" type="submit">Применить</button><a class="button quiet" href="/tickets">Сбросить</a></div>
+  </form>
+  <div class="table-wrap"><table class="data-table">
+  <thead><tr><th scope="col">Заявка</th><th scope="col">Категория</th><th scope="col">Приоритет</th><th scope="col">Статус</th><th scope="col">Исполнитель</th><th scope="col">Создана</th></tr></thead>
+  <tbody>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/501"><small>З-000501</small><strong>Учебное обращение 501</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/500"><small>З-000500</small><strong>Учебное обращение 500</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/499"><small>З-000499</small><strong>Учебное обращение 499</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/498"><small>З-000498</small><strong>Учебное обращение 498</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/497"><small>З-000497</small><strong>Учебное обращение 497</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/496"><small>З-000496</small><strong>Учебное обращение 496</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/495"><small>З-000495</small><strong>Учебное обращение 495</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/494"><small>З-000494</small><strong>Учебное обращение 494</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/493"><small>З-000493</small><strong>Учебное обращение 493</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/492"><small>З-000492</small><strong>Учебное обращение 492</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/491"><small>З-000491</small><strong>Учебное обращение 491</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/490"><small>З-000490</small><strong>Учебное обращение 490</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/489"><small>З-000489</small><strong>Учебное обращение 489</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/488"><small>З-000488</small><strong>Учебное обращение 488</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/487"><small>З-000487</small><strong>Учебное обращение 487</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/486"><small>З-000486</small><strong>Учебное обращение 486</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/485"><small>З-000485</small><strong>Учебное обращение 485</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/484"><small>З-000484</small><strong>Учебное обращение 484</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/483"><small>З-000483</small><strong>Учебное обращение 483</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/482"><small>З-000482</small><strong>Учебное обращение 482</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/481"><small>З-000481</small><strong>Учебное обращение 481</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/480"><small>З-000480</small><strong>Учебное обращение 480</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/479"><small>З-000479</small><strong>Учебное обращение 479</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/478"><small>З-000478</small><strong>Учебное обращение 478</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/477"><small>З-000477</small><strong>Учебное обращение 477</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/476"><small>З-000476</small><strong>Учебное обращение 476</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/475"><small>З-000475</small><strong>Учебное обращение 475</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/474"><small>З-000474</small><strong>Учебное обращение 474</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/473"><small>З-000473</small><strong>Учебное обращение 473</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/472"><small>З-000472</small><strong>Учебное обращение 472</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/471"><small>З-000471</small><strong>Учебное обращение 471</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/470"><small>З-000470</small><strong>Учебное обращение 470</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/469"><small>З-000469</small><strong>Учебное обращение 469</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/468"><small>З-000468</small><strong>Учебное обращение 468</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/467"><small>З-000467</small><strong>Учебное обращение 467</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/466"><small>З-000466</small><strong>Учебное обращение 466</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/465"><small>З-000465</small><strong>Учебное обращение 465</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/464"><small>З-000464</small><strong>Учебное обращение 464</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/463"><small>З-000463</small><strong>Учебное обращение 463</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/462"><small>З-000462</small><strong>Учебное обращение 462</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/461"><small>З-000461</small><strong>Учебное обращение 461</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/460"><small>З-000460</small><strong>Учебное обращение 460</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/459"><small>З-000459</small><strong>Учебное обращение 459</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/458"><small>З-000458</small><strong>Учебное обращение 458</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/457"><small>З-000457</small><strong>Учебное обращение 457</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/456"><small>З-000456</small><strong>Учебное обращение 456</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/455"><small>З-000455</small><strong>Учебное обращение 455</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/454"><small>З-000454</small><strong>Учебное обращение 454</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/453"><small>З-000453</small><strong>Учебное обращение 453</strong></a></td>
+    <td>Управление доступом</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-closed">Закрыта</span></td>
+    <td>Специалист отдела защиты</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  <tr>
+    <td><a class="ticket-link" href="/tickets/452"><small>З-000452</small><strong>Учебное обращение 452</strong></a></td>
+    <td>Антивирусная защита</td>
+    <td><span class="priority priority-normal">Обычный</span></td>
+    <td><span class="badge badge-new">Новая</span></td>
+    <td>Не назначен</td>
+    <td class="nowrap">2026-11-23 17:30</td>
+  </tr>
+  
+  </tbody>
+</table></div>
+</section>
+
+
+      <footer class="site-footer">Коробейникова Мария Вячеславовна. Преддипломная практика. <a href="/public/contacts">Контакты</a></footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -74,9 +74,9 @@ def test_unprivileged_dashboard_hides_admin_navigation(client):
     login(client)
     response = client.get("/")
     assert response.status_code == 200
-    assert 'href="/users"' not in response.text
-    assert "Локальная система" not in response.text
-    assert 'aria-current="page"' in response.text
+    assert 'href="/users"' not in response.get_data(as_text=True)
+    assert "Локальная система" not in response.get_data(as_text=True)
+    assert 'aria-current="page"' in response.get_data(as_text=True)
 
 
 def test_favicon_and_403_page(client):
@@ -88,4 +88,4 @@ def test_favicon_and_403_page(client):
     login(client)
     forbidden = client.get("/users")
     assert forbidden.status_code == 403
-    assert "Недостаточно прав" in forbidden.text
+    assert "Недостаточно прав" in forbidden.get_data(as_text=True)

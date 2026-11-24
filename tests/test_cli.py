@@ -34,9 +34,9 @@ def test_bootstrap_password_is_random_and_hashed(tmp_path, monkeypatch):
 
     path = tmp_path / "first.sqlite3"
     calls = []
-    import uvicorn
+    from flask import Flask
 
-    monkeypatch.setattr(uvicorn, "run", lambda app, **kwargs: calls.append(kwargs))
+    monkeypatch.setattr(Flask, "run", lambda self, **kwargs: calls.append(kwargs))
     monkeypatch.setattr(sys, "argv", ["run.py", "--db", str(path), "--port", "8008"])
     __main__.main()
 

@@ -1,12 +1,1 @@
-digraph Architecture {
-  graph [label="Архитектура системы учета заявок", labelloc=t, fontsize=20, fontname="DejaVu Sans", rankdir=TB, nodesep=0.7, ranksep=0.85, bgcolor=white, pad="0.4"];
-  node [shape=box, style="rounded", color="#6f7d8c", fontname="DejaVu Sans", fontsize=13, margin="0.25,0.16"];
-  edge [color="#747f8a", arrowsize=0.8];
-  browser [label="Пользователи\nБраузер Windows / Ubuntu"];
-  web [label="Веб-приложение\nFastAPI + HTML"];
-  business [label="Бизнес-логика\nЗаявки, пользователи, журнал"];
-  db [label="База данных\nSQLite"];
-  browser -> web [label="HTTP"];
-  web -> business;
-  business -> db [label="SQL"];
-}
+digraph "Компоненты" {graph [rankdir=TB,fontname="DejaVu Sans",fontsize=12,label="Диаграмма компонентов информационной системы",labelloc=t,bgcolor=white,nodesep=.7,ranksep=.8];node[shape=box,color=black,style=rounded,fontname="DejaVu Sans",fontsize=10];edge[fontname="DejaVu Sans",fontsize=9,color=black];b[label="Браузер\nHTML, CSS"]; web[label="Веб-сервер\nFlask, web.py"];svc[label="Предметные функции\nservice.py"]; db[label="База данных\nSQLite, db.py"];sec[label="Проверка доступа\nsecurity.py"]; ex[label="Файловый обмен\nexchange.py, openpyxl"];b->web[label="HTTP"];web->svc;web->sec;svc->db;web->ex;ex->db; }

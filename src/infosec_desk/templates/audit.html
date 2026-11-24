@@ -5,7 +5,7 @@
   <div class="table-wrap"><table class="data-table">
     <thead><tr><th scope="col">Дата и время</th><th scope="col">Пользователь</th><th scope="col">Действие</th><th scope="col">Заявка</th><th scope="col">Подробности</th></tr></thead>
     <tbody>{% for item in events %}
-      <tr><td class="nowrap">{{ item.created_at }}</td><td>{{ item.actor_name or 'Система' }}</td><td>{{ {'created':'Регистрация заявки', 'commented':'Комментарий', 'updated':'Изменение заявки', 'password_reset':'Смена пароля'}.get(item.action,item.action) }}</td><td>{% if item.ticket_id %}<a class="text-link" href="/tickets/{{ item.ticket_id }}">{{ item.ticket_id | ticket_no }}</a>{% else %} - {% endif %}</td><td>{{ item.details }}</td></tr>
+      <tr><td class="nowrap">{{ item.created_at }}</td><td>{{ item.actor_name or 'Система' }}</td><td>{{ {'created':'Регистрация заявки', 'commented':'Комментарий', 'updated':'Изменение заявки', 'password_reset':'Смена пароля', 'user_edited':'Изменение пользователя', 'asset_edited':'Изменение СЗИ', 'asset_archived':'Удаление СЗИ'}.get(item.action,item.action) }}</td><td>{% if item.ticket_id %}<a class="text-link" href="/tickets/{{ item.ticket_id }}">{{ item.ticket_id | ticket_no }}</a>{% else %} - {% endif %}</td><td>{{ item.details }}</td></tr>
     {% else %}<tr><td colspan="5" class="empty-cell"><div class="empty-state"><strong>Событий пока нет</strong><p>Операции пользователей будут отражаться здесь.</p></div></td></tr>{% endfor %}</tbody>
   </table></div>
 </section>

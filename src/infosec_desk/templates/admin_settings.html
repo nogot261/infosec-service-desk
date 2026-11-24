@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Настройки службы</h1><section class="panel"><form method="post" action="/admin/settings" class="stack"><input type="hidden" name="csrf_token" value="{{csrf_token}}"><label>Название сайта<input name="site_title" value="{{settings.site_title}}" required></label><label>Почта поддержки<input name="help_email" value="{{settings.help_email}}" required></label><label>Время работы<input name="office_hours" value="{{settings.office_hours}}" required></label><button type="submit">Сохранить</button></form></section>{%endblock%}

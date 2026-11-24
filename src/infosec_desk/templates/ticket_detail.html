@@ -12,6 +12,9 @@
       <div class="info-grid">
         <div><small>Категория</small><strong>{{ categories[ticket.category] }}</strong></div>
         <div><small>Приоритет</small><strong class="priority priority-{{ ticket.priority }}">{{ priorities[ticket.priority] }}</strong></div>
+        <div><small>Создана</small><strong>{{ ticket.created_at }}</strong></div>
+        <div><small>Решена</small><strong>{{ ticket.resolved_at or 'Не решена' }}</strong></div>
+        <div><small>Закрыта</small><strong>{{ ticket.closed_at or 'Не закрыта' }}</strong></div>
         <div><small>Заявитель</small><strong>{{ ticket.author_name }}</strong></div>
         <div><small>Средство защиты</small><strong>{{ ticket.asset_name or 'Не указано' }}</strong></div>
       </div>
@@ -45,4 +48,7 @@
     </div></section>
   </div>
 </div>
+
+<section class="panel"><h2>Вложения</h2><ul>{% for a in attachments %}<li><a href="/attachments/{{a.id}}">{{a.filename}}</a>, {{a.uploaded_at}}</li>{% endfor %}</ul><form action="/tickets/{{ticket.id}}/attachments" method="post" enctype="multipart/form-data"><input type="hidden" name="csrf_token" value="{{csrf_token}}"><label>Прикрепить PDF, PNG, JPEG или TXT (до 2 МБ)<input type="file" name="attachment" accept=".pdf,.png,.jpg,.jpeg,.txt" required></label><button type="submit">Добавить вложение</button></form></section>
+<section class="panel"><h2>История статусов</h2><ul>{%for h in history%}<li>{{h.occurred_at}}: {{statuses[h.old_status] if h.old_status else 'Создана'}} -> {{statuses[h.new_status]}} ({{h.actor_name or 'система'}})</li>{%endfor%}</ul></section>
 {% endblock %}

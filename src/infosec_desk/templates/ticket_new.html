@@ -22,4 +22,11 @@
     </form>
   </div>
 </section>
+<section class="panel">
+  <h2>Каталог услуг</h2>
+  <p>Каталог помогает выбрать категорию обращения.</p>
+  <ul>{% for item in services %}
+    <li><strong>{{ item.name }}</strong>: {{ item.description }}</li>
+  {% endfor %}</ul>
+</section>
 {% endblock %}

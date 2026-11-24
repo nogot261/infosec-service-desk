@@ -2,7 +2,7 @@ from conftest import csrf, login
 
 
 def test_health(client):
-    assert client.get("/health").json() == {"status": "ok"}
+    assert client.get("/health").get_json() == {"status": "ok"}
 
 
 def test_guest_redirect(client):
@@ -13,7 +13,7 @@ def test_guest_redirect(client):
 
 def test_login_and_logout(client):
     assert login(client).status_code == 200
-    assert "Панель управления" in client.get("/").text
+    assert "Панель управления" in client.get("/").get_data(as_text=True)
     token = csrf(client, "/")
     response = client.post("/logout", data={"csrf_token": token}, follow_redirects=False)
     assert response.status_code == 303
@@ -26,7 +26,7 @@ def test_login_rejects_bad_password(client):
         data={"csrf_token": csrf(client), "username": "alice", "password": "bad"},
         follow_redirects=True,
     )
-    assert "Неверный логин или пароль" in response.text
+    assert "Неверный логин или пароль" in response.get_data(as_text=True)
 
 
 def test_csrf_rejects_missing_token(client):
@@ -54,8 +54,8 @@ def test_create_ticket_web(client):
         "asset_id": "1",
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert "Проблема с сертификатом" in response.text
-    assert "З-000001" in response.text
+    assert "Проблема с сертификатом" in response.get_data(as_text=True)
+    assert "З-000001" in response.get_data(as_text=True)
 
 
 def test_requester_denied_admin_and_export(client):
@@ -77,10 +77,10 @@ def test_operator_can_update_and_export(client):
     response = client.post("/tickets/1/update", data={
         "csrf_token": csrf(client, "/tickets/1"), "status": "in_progress", "assignee_id": "2"
     }, follow_redirects=True)
-    assert "В работе" in response.text
+    assert "В работе" in response.get_data(as_text=True)
     exported = client.get("/export.csv")
     assert exported.status_code == 200 and "text/csv" in exported.headers["content-type"]
-    assert "Проблема настройки сети" in exported.content.decode("utf-8-sig")
+    assert "Проблема настройки сети" in exported.data.decode("utf-8-sig")
 
 
 def test_admin_can_create_user_and_asset(client):
@@ -90,13 +90,13 @@ def test_admin_can_create_user_and_asset(client):
         "username": "specialist2", "full_name": "Второй специалист",
         "password": "SpecialistTest123!", "role": "operator",
     }, follow_redirects=True)
-    assert "specialist2" in result.text
+    assert "specialist2" in result.get_data(as_text=True)
     result = client.post("/assets", data={
         "csrf_token": csrf(client, "/assets"),
         "inventory_no": "AV-20", "name": "Антивирусный сервер",
         "location": "ЦОД", "protection_class": "Антивирусная защита",
     }, follow_redirects=True)
-    assert "Антивирусный сервер" in result.text
+    assert "Антивирусный сервер" in result.get_data(as_text=True)
 
 
 def test_html_escaping(client):
@@ -109,5 +109,5 @@ def test_html_escaping(client):
         "category": "other", "priority": "normal",
     })
     result = client.get("/tickets/1")
-    assert "&lt;script&gt;" in result.text
-    assert payload not in result.text
+    assert "&lt;script&gt;" in result.get_data(as_text=True)
+    assert payload not in result.get_data(as_text=True)

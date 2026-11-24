@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Личный кабинет</h1>
+<section class="panel">
+  <p><strong>ФИО:</strong> {{ profile.full_name }}</p>
+  <p><strong>Логин:</strong> {{ profile.username }}</p>
+  <p><strong>Роль:</strong> {{ roles[profile.role] }}</p>
+</section>
+{% endblock %}
