@@ -46,3 +46,4 @@ def test_responsive_style_rules_exist():
     assert ".public-content { margin-top: 0; padding: 28px 34px 30px; }" in css
     assert '.site-footer a { color: var(--accent); text-decoration: underline' in css
     assert "@media (max-width: 540px)" in css
+    assert "scrollbar-width: thin" in css
