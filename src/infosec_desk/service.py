@@ -218,7 +218,7 @@ def statistics(db_path, user):
     condition = 'WHERE author_id=?' if user['role'] == 'requester' else ''
     params = (user['id'],) if condition else ()
     with connect(db_path) as db:
-        row = db.execute(f"SELECT COUNT(*) AS total,\n                SUM(CASE WHEN status NOT IN ('resolved','closed') THEN 1 ELSE 0 END) AS open,\n                SUM(CASE WHEN status IN ('resolved','closed') THEN 1 ELSE 0 END) AS resolved,\n                SUM(CASE WHEN priority='critical' AND status!='closed' THEN 1 ELSE 0 END)\n                    AS critical\n            FROM tickets {condition}", params).fetchone()
+        row = db.execute(f"SELECT COUNT(*) AS total,\n                COALESCE(SUM(CASE WHEN status NOT IN ('resolved','closed') THEN 1 ELSE 0 END), 0) AS open,\n                COALESCE(SUM(CASE WHEN status IN ('resolved','closed') THEN 1 ELSE 0 END), 0) AS resolved,\n                COALESCE(SUM(CASE WHEN priority='critical' AND status!='closed' THEN 1 ELSE 0 END), 0)\n                    AS critical\n            FROM tickets {condition}", params).fetchone()
         by_status = db.execute(f'SELECT status, COUNT(*) AS total FROM tickets {condition} GROUP BY status', params).fetchall()
     counts = {item['status']: item['total'] for item in by_status}
     return {'total': row['total'], 'open': row['open'], 'resolved': row['resolved'], 'critical': row['critical'], 'by_status': {key: counts.get(key, 0) for key in STATUSES}}
