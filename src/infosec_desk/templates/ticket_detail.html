@@ -49,6 +49,30 @@
   </div>
 </div>
 
-<section class="panel"><h2>Вложения</h2><ul>{% for a in attachments %}<li><a href="/attachments/{{a.id}}">{{a.filename}}</a>, {{a.uploaded_at}}</li>{% endfor %}</ul><form action="/tickets/{{ticket.id}}/attachments" method="post" enctype="multipart/form-data"><input type="hidden" name="csrf_token" value="{{csrf_token}}"><label>Прикрепить PDF, PNG, JPEG или TXT (до 2 МБ)<input type="file" name="attachment" accept=".pdf,.png,.jpg,.jpeg,.txt" required></label><button type="submit">Добавить вложение</button></form></section>
-<section class="panel"><h2>История статусов</h2><ul>{%for h in history%}<li>{{h.occurred_at}}: {{statuses[h.old_status] if h.old_status else 'Создана'}} -> {{statuses[h.new_status]}} ({{h.actor_name or 'система'}})</li>{%endfor%}</ul></section>
+<section class="panel" aria-labelledby="attachments-title">
+  <div class="panel-body">
+    <h2 id="attachments-title" class="panel-title">Вложения</h2>
+    <ul class="content-list">{% for a in attachments %}
+      <li><a class="text-link" href="/attachments/{{ a.id }}">{{ a.filename }}</a>
+        <span class="muted small">{{ a.uploaded_at }}</span></li>
+    {% else %}<li>Вложений пока нет.</li>{% endfor %}</ul>
+    <form class="stack attachment-form" action="/tickets/{{ ticket.id }}/attachments" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="ticket-attachment">Прикрепить PDF, PNG, JPEG или TXT (до 2 МБ)
+        <input id="ticket-attachment" type="file" name="attachment" accept=".pdf,.png,.jpg,.jpeg,.txt" required>
+      </label>
+      <div class="form-actions"><button class="primary" type="submit">Добавить вложение</button></div>
+    </form>
+  </div>
+</section>
+<section class="panel" aria-labelledby="status-history-title">
+  <div class="panel-body">
+    <h2 id="status-history-title" class="panel-title">История статусов</h2>
+    <ul class="content-list">{% for h in history %}
+      <li><span class="muted small">{{ h.occurred_at }}</span>
+        {{ statuses[h.old_status] if h.old_status else 'Создана' }} → {{ statuses[h.new_status] }}
+        <span class="muted small">({{ h.actor_name or 'система' }})</span></li>
+    {% else %}<li>Переходов статуса пока нет.</li>{% endfor %}</ul>
+  </div>
+</section>
 {% endblock %}

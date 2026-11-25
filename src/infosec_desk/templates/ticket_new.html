@@ -22,11 +22,13 @@
     </form>
   </div>
 </section>
-<section class="panel">
-  <h2>Каталог услуг</h2>
-  <p>Каталог помогает выбрать категорию обращения.</p>
-  <ul>{% for item in services %}
-    <li><strong>{{ item.name }}</strong>: {{ item.description }}</li>
-  {% endfor %}</ul>
+<section class="panel narrow" aria-labelledby="catalog-title">
+  <div class="panel-body readable-text">
+    <h2 id="catalog-title" class="panel-title">Каталог услуг</h2>
+    <p>Каталог помогает выбрать категорию обращения.</p>
+    <ul class="content-list">{% for item in services %}
+      <li><strong>{{ item.name }}</strong>: {{ item.description }}</li>
+    {% else %}<li>Каталог услуг пока пуст.</li>{% endfor %}</ul>
+  </div>
 </section>
 {% endblock %}

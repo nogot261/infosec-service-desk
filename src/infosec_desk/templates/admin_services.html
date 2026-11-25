@@ -1,5 +1,47 @@
-{% extends 'base.html' %}{% block content %}
-<h1>Каталог услуг</h1><p>Администратор управляет перечнем обслуживаемых услуг.</p>
-<section class="panel"><h2>Добавить услугу</h2><form method="post" action="/admin/services" class="stack"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><label>Код<input name="code" required></label><label>Название<input name="name" required></label><label>Описание<textarea name="description"></textarea></label><label>Категория<select name="category">{% for k,v in categories.items() %}<option value="{{k}}">{{v}}</option>{%endfor%}</select></label><button type="submit">Добавить</button></form></section>
-<section class="panel"><h2>Список услуг</h2><table><thead><tr><th>Код</th><th>Название</th><th>Категория</th><th>Активна</th><th>Действие</th></tr></thead><tbody>{% for item in items %}<tr><td>{{item.code}}</td><td>{{item.name}}</td><td>{{categories[item.category]}}</td><td>{{'Да' if item.active else 'Нет'}}</td><td><form method="post" action="/admin/services/{{item.id}}/toggle"><input type="hidden" name="csrf_token" value="{{csrf_token}}"><button type="submit">Изменить</button></form></td></tr>{%endfor%}</tbody></table></section>
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-head"><div><h1>Каталог услуг</h1>
+  <p class="page-description">Администратор управляет перечнем обслуживаемых услуг.</p>
+</div></div>
+<section class="panel narrow" aria-labelledby="service-add-title">
+  <div class="panel-body">
+    <h2 id="service-add-title" class="panel-title">Добавить услугу</h2>
+    <form method="post" action="/admin/services" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="form-grid">
+        <label for="service-code">Код<input id="service-code" name="code" required></label>
+        <label for="service-name">Название<input id="service-name" name="name" required></label>
+      </div>
+      <label for="service-description">Описание<textarea id="service-description" name="description" rows="3"></textarea></label>
+      <label for="service-category">Категория
+        <select id="service-category" name="category">{% for k, v in categories.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select>
+      </label>
+      <div class="form-actions"><button class="primary" type="submit">Добавить услугу</button></div>
+    </form>
+  </div>
+</section>
+<section class="panel" aria-labelledby="service-list-title">
+  <header class="panel-header"><h2 id="service-list-title">Список услуг</h2></header>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th scope="col">Код</th><th scope="col">Название</th><th scope="col">Категория</th><th scope="col">Активна</th><th scope="col">Действие</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td class="table-strong">{{ item.code }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ categories[item.category] }}</td>
+          <td>{{ 'Да' if item.active else 'Нет' }}</td>
+          <td>
+            <form method="post" action="/admin/services/{{ item.id }}/toggle">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="secondary" type="submit">{{ 'Отключить' if item.active else 'Включить' }}</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}<tr><td colspan="5" class="empty-cell">Услуги пока не добавлены.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

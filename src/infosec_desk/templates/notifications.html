@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Уведомления</h1>
-<section class="panel">
-  <form action="/notifications/read" method="post">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <button type="submit">Отметить прочитанными</button>
-  </form>
-  <ul>
-    {% for item in items %}
-      <li>{{ item.created_at }}{% if not item.is_read %} (новое){% endif %}: {{ item.text }}
-      {% if item.ticket_id %}<a href="/tickets/{{ item.ticket_id }}">Открыть заявку</a>{% endif %}</li>
-    {% else %}<li>Пока нет уведомлений.</li>{% endfor %}
-  </ul>
+<div class="page-head"><div><h1>Уведомления</h1>
+  <p class="page-description">Обновления по обращениям, к которым у вас есть доступ.</p>
+</div></div>
+<section class="panel narrow" aria-label="Список уведомлений">
+  <div class="panel-body">
+    <form action="/notifications/read" method="post" class="form-actions">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="secondary" type="submit">Отметить прочитанными</button>
+    </form>
+    <ul class="content-list">
+      {% for item in items %}
+      <li>
+        <span class="muted small">{{ item.created_at }}{% if not item.is_read %} (новое){% endif %}</span>
+        <span>{{ item.text }}</span>
+        {% if item.ticket_id %}<a class="text-link" href="/tickets/{{ item.ticket_id }}">Открыть заявку</a>{% endif %}
+      </li>
+      {% else %}<li>Пока нет уведомлений.</li>{% endfor %}
+    </ul>
+  </div>
 </section>
 {% endblock %}

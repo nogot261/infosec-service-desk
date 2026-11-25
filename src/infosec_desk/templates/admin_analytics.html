@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Статистика службы</h1>
-<section class="panel">
-  <table>
-    <thead><tr><th>Показатель</th><th>Количество</th></tr></thead>
-    <tbody>{% for name, value in stats.items() %}
-      <tr><td>{{ name }}</td><td>{{ value }}</td></tr>
-    {% endfor %}</tbody>
-  </table>
+<div class="page-head"><div><h1>Статистика службы</h1>
+  <p class="page-description">Основные показатели обработки обращений.</p>
+</div></div>
+<section class="panel" aria-label="Показатели службы">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th scope="col">Показатель</th><th scope="col">Количество</th></tr></thead>
+      <tbody>
+        {% for name, value in stats.items() %}
+        <tr><td>{{ name }}</td><td class="table-strong">{{ value }}</td></tr>
+        {% else %}<tr><td colspan="2" class="empty-cell">Нет данных для отображения.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 {% endblock %}

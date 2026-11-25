@@ -304,3 +304,43 @@ textarea { resize: vertical; line-height: 1.6; min-height: 105px; }
   .topbar-login { padding: 7px 13px; }
   .site-footer { gap: 8px; }
 }
+
+/* Единое оформление содержимого форм, справочных разделов и таблиц. */
+.form-card { width: 100%; max-width: 760px; }
+.form-card .panel-body { padding: 30px 34px; }
+.form-card .form-actions { padding-top: 7px; }
+.panel-body > :last-child { margin-bottom: 0; }
+.panel-body > h2:first-child { margin-top: 0; }
+.readable-text { color: #435267; line-height: 1.75; }
+.readable-text p { margin: 0 0 16px; }
+.readable-text a, .content-list a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.content-list { list-style: none; margin: 0; padding: 0; }
+.content-list li { padding: 13px 0; border-bottom: 1px solid var(--border); line-height: 1.65; overflow-wrap: anywhere; }
+.content-list li:first-child { padding-top: 0; }
+.content-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+.content-list li > span, .content-list li > a { display: block; }
+.content-list + .attachment-form { margin-top: 24px; }
+.panel-body > .form-actions + .content-list { margin-top: 24px; }
+.profile-details { margin: 0; }
+.profile-details > div { display: grid; grid-template-columns: 150px minmax(0,1fr); gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.profile-details > div:first-child { padding-top: 0; }
+.profile-details > div:last-child { padding-bottom: 0; border-bottom: 0; }
+.profile-details dt { color: var(--muted); font-size: 12px; }
+.profile-details dd { margin: 0; color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
+.table-action { margin-top: 9px; }
+.table-action .secondary, .data-table td button { min-height: 34px; padding: 7px 12px; }
+.data-table .wrap-cell, .data-table .message-cell { overflow-wrap: anywhere; }
+.data-table .message-cell { min-width: 220px; max-width: 340px; white-space: pre-wrap; line-height: 1.6; }
+.data-table td { overflow-wrap: anywhere; }
+.data-table details { min-width: 180px; }
+.data-table details .stack { padding: 12px 0; }
+.data-table details summary { color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+@media(max-width:800px) {
+  .form-card .panel-body { padding: 24px 22px; }
+  .profile-details > div { grid-template-columns: 120px minmax(0,1fr); }
+}
+@media(max-width:540px) {
+  .form-card .panel-body { padding: 22px 18px; }
+  .profile-details > div { grid-template-columns: 1fr; gap: 3px; }
+  .panel-body { padding: 22px 18px; }
+}

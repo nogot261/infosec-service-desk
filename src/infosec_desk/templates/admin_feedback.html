@@ -1,2 +1,33 @@
-{% extends 'base.html' %}{% block content %}
-<h1>Сообщения посетителей</h1><section class="panel"><div class="table-wrap"><table><thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Тема</th><th>Сообщение</th><th>Статус</th></tr></thead><tbody>{% for item in items %}<tr><td>{{item.created_at}}</td><td>{{item.sender_name}}</td><td>{{item.sender_email}}</td><td>{{item.subject}}</td><td>{{item.body}}</td><td>{{item.state}}{% if item.state=='new' %}<form method="post" action="/admin/feedback/{{item.id}}/processed"><input type="hidden" name="csrf_token" value="{{csrf_token}}"><button type="submit">Обработано</button></form>{% endif %}</td></tr>{%endfor%}</tbody></table></div></section>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-head"><div><h1>Сообщения посетителей</h1>
+  <p class="page-description">Обращения, поступившие через открытую форму обратной связи.</p>
+</div></div>
+<section class="panel" aria-label="Сообщения обратной связи">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th scope="col">Дата</th><th scope="col">Имя</th><th scope="col">Email</th><th scope="col">Тема</th><th scope="col">Сообщение</th><th scope="col">Статус</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td class="nowrap">{{ item.created_at }}</td>
+          <td>{{ item.sender_name }}</td>
+          <td class="wrap-cell">{{ item.sender_email }}</td>
+          <td class="wrap-cell">{{ item.subject }}</td>
+          <td class="message-cell">{{ item.body }}</td>
+          <td>
+            <span class="badge {{ 'badge-new' if item.state == 'new' else 'badge-closed' }}">{{ 'Новое' if item.state == 'new' else 'Обработано' }}</span>
+            {% if item.state == 'new' %}
+            <form class="table-action" method="post" action="/admin/feedback/{{ item.id }}/processed">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="secondary" type="submit">Обработано</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}<tr><td colspan="6" class="empty-cell">Сообщений пока нет.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

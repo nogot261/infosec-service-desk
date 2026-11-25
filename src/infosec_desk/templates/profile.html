@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Личный кабинет</h1>
-<section class="panel">
-  <p><strong>ФИО:</strong> {{ profile.full_name }}</p>
-  <p><strong>Логин:</strong> {{ profile.username }}</p>
-  <p><strong>Роль:</strong> {{ roles[profile.role] }}</p>
+<div class="page-head"><div><h1>Личный кабинет</h1>
+  <p class="page-description">Сведения о вашей учётной записи.</p>
+</div></div>
+<section class="panel narrow" aria-label="Данные пользователя">
+  <div class="panel-body">
+    <dl class="profile-details">
+      <div><dt>ФИО</dt><dd>{{ profile.full_name }}</dd></div>
+      <div><dt>Логин</dt><dd>{{ profile.username }}</dd></div>
+      <div><dt>Роль</dt><dd>{{ roles[profile.role] }}</dd></div>
+    </dl>
+  </div>
 </section>
 {% endblock %}

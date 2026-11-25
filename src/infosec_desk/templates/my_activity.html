@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Моя активность</h1>
-<section class="panel">
-  <p>Доступные обращения по вашей роли.</p>
-  <ul>
-    {% for item in items %}
-      <li><a href="/tickets/{{ item.id }}">{{ item.id | ticket_no }}: {{ item.title }}</a> - {{ statuses[item.status] }}</li>
-    {% else %}<li>Доступных заявок пока нет.</li>{% endfor %}
-  </ul>
+<div class="page-head"><div><h1>Моя активность</h1>
+  <p class="page-description">Доступные обращения и их текущие статусы.</p>
+</div></div>
+<section class="panel narrow" aria-label="Мои обращения">
+  <div class="panel-body">
+    <ul class="content-list">
+      {% for item in items %}
+      <li>
+        <a class="text-link" href="/tickets/{{ item.id }}">{{ item.id | ticket_no }}: {{ item.title }}</a>
+        <span class="muted small">{{ statuses[item.status] }}</span>
+      </li>
+      {% else %}<li>Доступных заявок пока нет.</li>{% endfor %}
+    </ul>
+  </div>
 </section>
 {% endblock %}

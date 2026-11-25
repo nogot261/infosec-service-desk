@@ -1,20 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Обмен справочником СЗИ</h1>
-<section class="panel">
-  <h2>Выгрузка справочника</h2>
-  <p>Скачать действующие и архивные средства защиты в файле JSON.</p>
-  <p><a class="button secondary" href="/admin/assets.json">Скачать JSON</a></p>
+<div class="page-head"><div><h1>Обмен справочником СЗИ</h1>
+  <p class="page-description">Импорт и экспорт сведений о средствах защиты.</p>
+</div></div>
+<section class="panel narrow" aria-labelledby="exchange-export">
+  <div class="panel-body">
+    <h2 id="exchange-export" class="panel-title">Выгрузка справочника</h2>
+    <p class="muted">Скачать действующие и архивные средства защиты в файле JSON.</p>
+    <div class="form-actions"><a class="button secondary" href="/admin/assets.json">Скачать JSON</a></div>
+  </div>
 </section>
-<section class="panel">
-  <h2>Загрузка справочника</h2>
-  <p>При импорте добавляются только новые инвентарные номера. Существующие записи не изменяются.</p>
-  <form method="post" action="/admin/assets.json" enctype="multipart/form-data" class="stack">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <label>Файл JSON размером до 2 МБ
-      <input type="file" name="assets_file" accept="application/json,.json" required>
-    </label>
-    <button type="submit">Импортировать</button>
-  </form>
+<section class="panel narrow" aria-labelledby="exchange-import">
+  <div class="panel-body">
+    <h2 id="exchange-import" class="panel-title">Загрузка справочника</h2>
+    <p class="muted">При импорте добавляются только новые инвентарные номера. Существующие записи не изменяются.</p>
+    <form method="post" action="/admin/assets.json" enctype="multipart/form-data" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="assets-json">Файл JSON размером до 2 МБ
+        <input id="assets-json" type="file" name="assets_file" accept="application/json,.json" required>
+      </label>
+      <div class="form-actions"><button class="primary" type="submit">Импортировать</button></div>
+    </form>
+  </div>
 </section>
 {% endblock %}
