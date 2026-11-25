@@ -2,24 +2,53 @@
 {% block content %}
 <div class="page-head"><div><p class="section-label">Администрирование</p><h1>Пользователи</h1><p class="page-description">Учетные записи и роли сотрудников.</p></div></div>
 <section class="panel" aria-label="Список пользователей">
-  <div class="table-wrap"><table class="data-table">
-    <thead><tr><th scope="col">Логин</th><th scope="col">ФИО</th><th scope="col">Роль</th><th scope="col">Состояние</th><th scope="col">Действия</th></tr></thead>
-    <tbody>{% for member in users %}<tr><td class="table-strong">{{ member.username }}</td><td>{{ member.full_name }}</td><td>{{ roles[member.role] }}</td><td>{{ 'Активен' if member.active else 'Отключен' }}</td><td>
-      <details><summary>Изменить</summary>
-        <form method="post" action="/users/{{ member.id }}/edit" class="stack">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-          <label>Логин<input name="username" value="{{ member.username }}" required maxlength="40"></label>
-          <label>ФИО<input name="full_name" value="{{ member.full_name }}" required maxlength="120"></label>
-          <label>Роль<select name="role">{% for key,label in roles.items() %}<option value="{{ key }}" {% if key==member.role %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
-          <label>Состояние<select name="active"><option value="1" {% if member.active %}selected{% endif %}>Активен</option><option value="0" {% if not member.active %}selected{% endif %}>Отключен</option></select></label>
-          <button type="submit">Сохранить</button>
-        </form>
-      </details>
-      {% if member.id != user.id and member.active %}<form method="post" action="/users/{{ member.id }}/delete" onsubmit="return confirm('Отключить учетную запись?');">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button type="submit">Удалить</button>
-      </form>{% endif %}
-    </td></tr>{% else %}<tr><td colspan="5" class="empty-cell">Пользователи не найдены</td></tr>{% endfor %}</tbody>
-  </table></div>
+  <div class="table-wrap users-table">
+    <table class="data-table">
+      <thead>
+        <tr><th scope="col">Логин</th><th scope="col">ФИО</th><th scope="col">Роль</th><th scope="col">Состояние</th><th scope="col">Действия</th></tr>
+      </thead>
+      <tbody>
+      {% for member in users %}
+        <tr>
+          <td class="table-strong">{{ member.username }}</td>
+          <td>{{ member.full_name }}</td>
+          <td>{{ roles[member.role] }}</td>
+          <td>{{ 'Активен' if member.active else 'Отключен' }}</td>
+          <td class="user-actions">
+            <div class="table-actions">
+              <button type="button" class="secondary button-sm" aria-expanded="false"
+                      aria-controls="user-editor-{{ member.id }}"
+                      data-user-editor-target="user-editor-{{ member.id }}">Изменить</button>
+              {% if member.id != user.id and member.active %}
+              <form method="post" action="/users/{{ member.id }}/delete"
+                    onsubmit="return confirm('Отключить учетную запись?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button class="secondary danger button-sm" type="submit">Отключить</button>
+              </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        <tr class="user-editor-row" id="user-editor-{{ member.id }}" hidden>
+          <td colspan="5">
+            <form method="post" action="/users/{{ member.id }}/edit" class="user-editor-form stack">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <div class="form-grid">
+                <label>Логин<input name="username" value="{{ member.username }}" required maxlength="40"></label>
+                <label>ФИО<input name="full_name" value="{{ member.full_name }}" required maxlength="120"></label>
+                <label>Роль<select name="role">{% for key,label in roles.items() %}<option value="{{ key }}" {% if key==member.role %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+                <label>Состояние<select name="active"><option value="1" {% if member.active %}selected{% endif %}>Активен</option><option value="0" {% if not member.active %}selected{% endif %}>Отключен</option></select></label>
+              </div>
+              <div class="form-actions"><button class="primary" type="submit">Сохранить изменения</button></div>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="empty-cell">Пользователи не найдены</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 <section class="panel narrow" aria-labelledby="new-user-title">
   <div class="field-panel"><h2 id="new-user-title">Добавить пользователя</h2>
@@ -35,4 +64,25 @@
     </form>
   </div>
 </section>
+
+<script>
+document.addEventListener('click', function (event) {
+  const button = event.target.closest('[data-user-editor-target]');
+  if (!button) return;
+  const row = document.getElementById(button.dataset.userEditorTarget);
+  if (!row) return;
+  const shouldOpen = row.hidden;
+  document.querySelectorAll('[data-user-editor-target][aria-expanded="true"]').forEach(function (openButton) {
+    const openRow = document.getElementById(openButton.dataset.userEditorTarget);
+    if (openRow) openRow.hidden = true;
+    openButton.setAttribute('aria-expanded', 'false');
+  });
+  row.hidden = !shouldOpen;
+  button.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+  if (shouldOpen) {
+    const firstField = row.querySelector('input[name="username"]');
+    if (firstField) firstField.focus();
+  }
+});
+</script>
 {% endblock %}

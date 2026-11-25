@@ -142,7 +142,7 @@ input::placeholder, textarea::placeholder { color: #8c98a7; }
 textarea { resize: vertical; line-height: 1.6; min-height: 105px; }
 .hint { color: #758397; font-size: 11px; font-weight: 450; line-height: 1.5; }
 .stack { display: grid; gap: 19px; }
-.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
 .form-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-top: 3px; }
 .field-panel { padding: 27px 30px; }
 .field-panel > h2 { margin-bottom: 22px; }
@@ -343,4 +343,21 @@ textarea { resize: vertical; line-height: 1.6; min-height: 105px; }
   .form-card .panel-body { padding: 22px 18px; }
   .profile-details > div { grid-template-columns: 1fr; gap: 3px; }
   .panel-body { padding: 22px 18px; }
+}
+
+/* Администрирование пользователей: действия и редактор на отдельной строке. */
+.users-table .user-actions { vertical-align: middle; min-width: 210px; }
+.users-table .table-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.users-table .button-sm { min-height: 34px; padding: 7px 12px; font-size: 12px; }
+.users-table .danger { color: #8b3b38; border-color: #dfc1be; background: #fff; }
+.users-table .danger:hover { background: #fff5f4; }
+.users-table .user-editor-row[hidden] { display: none; }
+.users-table .user-editor-row td { background: #f7f9fc; padding: 18px 20px 22px; }
+.users-table .user-editor-form {
+  max-width: 820px; padding: 22px 24px; border: 1px solid var(--border);
+  border-radius: 10px; background: #fff;
+}
+.users-table .user-editor-form .form-actions { justify-content: flex-start; }
+@media(max-width:800px) {
+  .users-table .user-editor-form { padding: 18px; }
 }
